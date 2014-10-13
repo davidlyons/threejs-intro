@@ -46,9 +46,6 @@ a:focus {
   width: 1280px;
   height: 720px;
 }
-.deck-container > .slide {
-  padding: 20px 115px;
-}
 .slide {
   width: 100%;
 }
