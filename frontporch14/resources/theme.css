@@ -197,6 +197,13 @@ code {
   margin-top: 370px;
   margin-left: -640px;
 }
+#github {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  margin-top: 370px;
+  margin-right: -640px;
+}
 /* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+python */
 /**
  * prism.js default theme for JavaScript, CSS and HTML
