@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - materials - cube reflection / refraction</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background:#000;
+				color:#fff;
+				padding:0;
+				margin:0;
+				overflow:hidden;
+				font-family:georgia;
+				text-align:center;
+			}
+			a {	color: #ff0080;	text-decoration: none; }
+			a:hover { color: #0080ff; }
+
+			canvas { pointer-events:none; z-index:10; }
+
+			/* stats */
+			#fps, #ms { background: transparent !important; }
+			#fpsText, #msText { color: #555 !important; }
+			#fpsGraph, #msGraph { display: none; }
+		</style>
+	</head>
+
+	<body>
+
+		<script src="three/three.min.js"></script>
+		<script src="three/controls/OrbitControls.js"></script>
+		<script src="three/Detector.js"></script>
+		<script src="three/libs/stats.min.js"></script>
+		<!-- <script src="three/libs/dat.gui.min.js"></script> -->
+		<script src="three/libs/tween.min.js"></script>
+
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, stats;
+
+			var camera, scene, renderer;
+			var cameraCube, sceneCube;
+
+			var controls;
+
+			var mesh, geometry, wfh, group;
+
+			var loader;
+
+			var pointLight;
+
+			var mouseX = 0;
+			var mouseY = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			// document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 100000 );
+				camera.position.z = 2000;
+				camera.position.y = 600;
+
+				cameraCube = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 100 );
+
+				scene = new THREE.Scene();
+				// sceneCube = new THREE.Scene();
+
+				controls = new THREE.OrbitControls( camera );
+				controls.autoRotate = true;
+				controls.autoRotateSpeed = 2;
+				controls.noKeys = true;
+
+				group = new THREE.Object3D();
+				scene.add(group);
+
+				// LIGHTS
+
+				var ambient = new THREE.AmbientLight( 0xffffff );
+				group.add( ambient );
+
+				pointLight = new THREE.PointLight( 0xffffff, 2 );
+				group.add( pointLight );
+
+				// light representation
+
+				var sphere = new THREE.SphereGeometry( 100, 16, 8 );
+
+				var mesh = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffaa00 } ) );
+				mesh.scale.set( 0.05, 0.05, 0.05 );
+				pointLight.add( mesh );
+
+				var path = "images/cube/Bridge2/";
+				var format = '.jpg';
+				var urls = [
+						path + 'posx' + format, path + 'negx' + format,
+						path + 'posy' + format, path + 'negy' + format,
+						path + 'posz' + format, path + 'negz' + format
+					];
+
+				var reflectionCube = THREE.ImageUtils.loadTextureCube( urls );
+				reflectionCube.format = THREE.RGBFormat;
+
+				var refractionCube = new THREE.CubeTexture( reflectionCube.image, new THREE.CubeRefractionMapping() );
+				refractionCube.format = THREE.RGBFormat;
+
+				//var cubeMaterial3 = new THREE.MeshPhongMaterial( { color: 0x000000, specular:0xaa0000, envMap: reflectionCube, combine: THREE.MixOperation, reflectivity: 0.25 } );
+				var cubeMaterial3 = new THREE.MeshLambertMaterial( { color: 0xff6600, ambient: 0x993300, envMap: reflectionCube, combine: THREE.MixOperation, reflectivity: 0.3 } );
+				var cubeMaterial2 = new THREE.MeshLambertMaterial( { color: 0xffee00, ambient: 0x996600, envMap: refractionCube, refractionRatio: 0.95 } );
+				var cubeMaterial1 = new THREE.MeshLambertMaterial( { color: 0xffffff, ambient: 0xaaaaaa, envMap: reflectionCube } )
+
+				// Skybox
+
+				var shader = THREE.ShaderLib[ "cube" ];
+				shader.uniforms[ "tCube" ].value = reflectionCube;
+
+				var material = new THREE.ShaderMaterial( {
+
+					fragmentShader: shader.fragmentShader,
+					vertexShader: shader.vertexShader,
+					uniforms: shader.uniforms,
+					depthWrite: false,
+					side: THREE.BackSide
+
+				} ),
+
+				mesh = new THREE.Mesh( new THREE.BoxGeometry( 50000, 50000, 50000 ), material );
+				// mesh.scale.set(500,500,500);
+				group.add( mesh );
+
+				wfh = new THREE.WireframeHelper( mesh, 0xffffff );
+				wfh.material.depthWrite = false;
+				wfh.renderDepth = 1;
+				wfh.visible = false;
+				group.add( wfh );
+
+				//
+
+				renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+				renderer.setClearColor(0x000000, 0);
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				// renderer.autoClear = false;
+				container.appendChild( renderer.domElement );
+
+				//
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				stats.domElement.style.zIndex = 100;
+				container.appendChild( stats.domElement );
+
+				//
+
+				// var gh = new THREE.GridHelper( 500, 50 );
+				// group.add(gh);
+
+
+				loader = new THREE.JSONLoader();
+
+				loader.load( "models/teapot.js", function( geometry ) {
+					createScene( geometry, cubeMaterial1, cubeMaterial2, cubeMaterial3 )
+				});
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				cameraCube.aspect = window.innerWidth / window.innerHeight;
+				cameraCube.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function createScene( geometry, m1, m2, m3 ) {
+
+				var s = 15;
+
+				var mesh = new THREE.Mesh( geometry, m1 );
+				mesh.position.z = - 100;
+				mesh.position.y = - 200;
+				mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
+				group.add( mesh );
+
+				var mesh = new THREE.Mesh( geometry, m2 );
+				mesh.position.x = - 900;
+				mesh.position.z = - 100;
+				mesh.position.y = - 200;
+				mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
+				group.add( mesh );
+
+				var mesh = new THREE.Mesh( geometry, m3 );
+				mesh.position.x = 900;
+				mesh.position.z = - 100;
+				mesh.position.y = - 200;
+				mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
+				group.add( mesh );
+
+				// loader.statusDomElement.style.display = "none";
+
+			}
+
+			function onDocumentMouseMove(event) {
+
+				mouseX = ( event.clientX - windowHalfX ) * 4;
+				mouseY = ( event.clientY - windowHalfY ) * 4;
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+				controls.update();
+				TWEEN.update();
+			}
+
+			function render() {
+
+				var timer = -0.0002 * Date.now();
+
+				pointLight.position.x = 1500 * Math.cos( timer );
+				pointLight.position.z = 1500 * Math.sin( timer );
+
+				// camera.position.x += ( mouseX - camera.position.x ) * .05;
+				// camera.position.y += ( - mouseY - camera.position.y ) * .05;
+
+				// camera.lookAt( scene.position );
+				// cameraCube.rotation.copy( camera.rotation );
+
+				// renderer.render( sceneCube, cameraCube );
+				renderer.render( scene, camera );
+
+			}
+
+
+
+
+			function setupTween(obj, prop, targetValue) {
+			  var update  = function(){
+			    obj[prop] = current.property;
+			  }
+			  
+			  var current = { property: obj[prop] };
+			  var target = { property: targetValue };
+
+			  var tween = new TWEEN.Tween(current).to(target, 800)
+			    .easing(TWEEN.Easing.Cubic.Out)
+			    .onUpdate(update);
+
+			  tween.start();
+			}
+
+			var step = 1;
+
+			function applyStep(step) {
+			  // console.log(step);
+			  if      (step == 1) {
+			  	wfh.visible = false;
+			  }
+			  else if (step == 2) {
+			  	wfh.visible = true;
+
+					setupTween(group.scale, 'x', 1);
+					setupTween(group.scale, 'y', 1);
+					setupTween(group.scale, 'z', 1);
+			  }
+			  else if (step == 3) {
+			  	setupTween(group.scale, 'x', 0.02);
+			  	setupTween(group.scale, 'y', 0.02);
+			  	setupTween(group.scale, 'z', 0.02);	
+			  	wfh.visible = true;
+			  }
+			  else if (step == 4) {
+			  	wfh.visible = false;
+			  }
+			  
+			}
+
+			onmessage = function(e) {
+			  // paused = (e.data == 'pause' || e.data == 'slide:stop');
+			  step = e.data.director.args[0];
+			  applyStep( step );
+			};
+
+			function forward() {
+			  step++;
+			  if (step > 4) { step = 4; return; }
+			  applyStep(step);
+			}
+
+			function back() {
+			  step--;
+			  if (step <= 0) { step = 1; return; }
+			  applyStep(step);
+			}
+
+			// Controls for stand-alone
+			window.addEventListener('keydown', function (e) {
+			  if (e.keyCode == 38 || e.keyCode == 37) back();
+			  if (e.keyCode == 40 || e.keyCode == 39) forward();
+			});
+
+		</script>
+
+	</body>
+</html>

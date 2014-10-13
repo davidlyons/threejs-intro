@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Three.js Three Point Lighting</title>
+    
+    <style type="text/css">
+      html { overflow: hidden; }
+      body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
+
+      a { color: #0088cc; text-decoration: none; }
+      a:hover, a:focus { color: #005580; text-decoration: underline; }
+
+      /* stats */
+      #fps, #ms { background: transparent !important; }
+      #fpsText, #msText { color: #aaa !important; }
+      #fpsGraph, #msGraph { display: none; }
+    </style>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      if (document.location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-34432087-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      }
+    </script>
+
+  </head>
+
+  <body>
+
+    <div id="container"></div>
+    
+    <script src="three/three.min.js"></script>
+    <script src="three/cameras/CombinedCamera.js"></script>
+    <script src="three/controls/OrbitControls.js"></script>
+    <script src="three/Detector.js"></script>
+    <script src="three/libs/stats.min.js"></script>
+    <script src="three/libs/dat.gui.min.js"></script>
+    <script src="three/libs/tween.min.js"></script>
+
+    <script>
+
+      if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+
+      var container;
+
+      var stats;
+
+      var camera, controls, scene, renderer;
+
+      var mesh, material, grid;
+
+      var ambLight, keyLight, keyLightHelper
+      var fillLight, fillLightHelper, rimLight, rimLightHelper;
+
+      var white = new THREE.Color(0xdddddd);
+      var lightBlue = new THREE.Color(0xb4e7f2);
+      var darkGrey = new THREE.Color(0x444444);
+      var black = new THREE.Color(0x000000);
+      var red = new THREE.Color(0xff0000);
+      var green = new THREE.Color(0x00ff00);
+      var blue = new THREE.Color(0x0000ff);
+
+      var mouseX = 0, mouseY = 0;
+
+      var windowHalfX = window.innerWidth / 2;
+      var windowHalfY = window.innerHeight / 2;
+
+      init();
+      animate();
+
+      function init() {
+        scene = new THREE.Scene();
+
+        container = document.getElementById( 'container' );
+
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
+        camera.position.set(0, 75, 250);
+        camera.lookAt( scene.position );
+
+        // add objects here
+
+
+        grid = new THREE.GridHelper( 350, 50 );
+        grid.setColors( 0x555556, 0xbbbbbb );
+        grid.position.y = -65;
+        scene.add( grid );
+
+
+        // ambient light
+        ambLight = new THREE.AmbientLight( darkGrey );
+        scene.add( ambLight );
+
+
+        // directional - KEY LIGHT
+        keyLight = new THREE.DirectionalLight( white, .7 );
+        keyLight.position.set( -80, 60, 80 );
+        scene.add( keyLight );
+        
+        keyLightHelper = new THREE.DirectionalLightHelper( keyLight, 15 );
+        scene.add( keyLightHelper );
+
+
+        // directional - FILL LIGHT
+        fillLight = new THREE.DirectionalLight( white, .3 );
+        fillLight.position.set( 80, 40, 40 );
+        scene.add( fillLight );
+        
+        fillLightHelper = new THREE.DirectionalLightHelper( fillLight, 15 );
+        scene.add( fillLightHelper );
+
+
+        // directional - RIM LIGHT
+        rimLight = new THREE.DirectionalLight( white, .6 );
+        rimLight.position.set( -20, 80, -80 );
+        scene.add( rimLight );
+        
+        rimLightHelper = new THREE.DirectionalLightHelper( rimLight, 15 );
+        scene.add( rimLightHelper );
+
+
+
+        material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, shininess: 40, shading: THREE.SmoothShading });
+        
+        // var planeGeo = new THREE.PlaneGeometry( 700, 700, 1, 1 );
+        // mesh = new THREE.Mesh( planeGeo, material );
+        // mesh.rotation.x = -Math.PI/2;
+        // mesh.position.y = -65;
+        // scene.add( mesh );
+
+        var geometry = new THREE.SphereGeometry( 60, 24, 16 );
+        mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
+
+
+
+
+        renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+        // renderer.setClearColor( 0xBBBBBB, 1 );
+        renderer.setClearColor( 0x000000, 0 ); // the default
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        container.appendChild( renderer.domElement );
+
+
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.noKeys = true;
+
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        container.appendChild( stats.domElement );
+
+        // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+        //
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+      }
+
+
+      function setupGui() {
+        // dat.GUI debugging -----------------------------------------
+        var gui = new dat.GUI();
+        var f1 = gui.addFolder('meshOuter rotation');
+        f1.add(mesh.position, 'x', 0, 2*Math.PI);
+        f1.add(mesh.position, 'y', 0, 2*Math.PI);
+        f1.add(mesh.position, 'z', 0, 2*Math.PI);
+        f1.open();
+      }
+
+
+      function onWindowResize() {
+
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+
+        // Perspective
+        camera.aspect = window.innerWidth / window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );  
+      }
+
+      function onDocumentMouseMove( event ) {
+
+        mouseX = ( event.clientX - windowHalfX );
+        mouseY = ( event.clientY - windowHalfY );
+
+      }
+
+      //
+
+      var paused = false;
+
+      function animate() {
+        requestAnimationFrame( animate );
+        if (!paused) {
+          render();
+          stats.update();
+          // controls.update();
+          TWEEN.update();
+        }
+      }
+
+      function render() {
+
+        // var speed = 2;
+
+        // if (mesh) {
+          // mesh.rotation.y -= 0.003;
+          // mesh.rotation.x -= 0.007 * speed;
+        // }
+
+        // console.log('render cube');
+
+        renderer.render( scene, camera );
+      }
+
+
+      // --------
+
+
+      function setupTween(obj, prop, targetValue) {
+        var update  = function(){
+          obj[prop] = current.property;
+          // keyLightHelper.update();
+          controls.update();
+        }
+
+        var current = { property: obj[prop] };
+        var target = { property: targetValue };
+
+        var tween = new TWEEN.Tween(current).to(target, 800)
+          .easing(TWEEN.Easing.Cubic.Out)
+          .onUpdate(update);
+
+        tween.start();
+      }
+      
+
+      var step = 1;
+
+
+      function applyStep(step) {
+        // console.log(step);
+        
+        if   (step == 1) {
+          setupTween(camera.position, 'y', 75); // default
+          setupTween(camera.position, 'z', 250); // default
+        }
+        else if (step == 2) {
+          setupTween(camera.position, 'y', 350);
+          setupTween(camera.position, 'z', 0);
+          
+          keyLight.color = white;
+          fillLight.color = white;
+          rimLight.color = white;
+
+          keyLightHelper.update();
+          fillLightHelper.update();
+          rimLightHelper.update();
+
+        }
+        else if (step == 3) {
+          keyLight.color = red;
+          fillLight.color = green;
+          rimLight.color = blue;
+
+          keyLightHelper.update();
+          fillLightHelper.update();
+          rimLightHelper.update();
+        }
+
+      }
+
+      onmessage = function(e) {
+        // paused = (e.data == 'pause' || e.data == 'slide:stop');
+        step = e.data.director.args[0];
+        applyStep( step );
+      };
+
+      function forward() {
+        step++;
+        if (step > 3) { step = 3; return; }
+        applyStep(step);
+      }
+
+      function back() {
+        step--;
+        if (step <= 0) { step = 1; return; }
+        applyStep(step);
+      }
+
+      // Controls for stand-alone
+      window.addEventListener('keydown', function (e) {
+        if (e.keyCode == 38 || e.keyCode == 37) back();
+        if (e.keyCode == 40 || e.keyCode == 39) forward();
+      });
+
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Three.js UVs</title>
+    
+    <style type="text/css">
+      html { overflow: hidden; }
+      body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
+
+      a { color: #0088cc; text-decoration: none; }
+      a:hover, a:focus { color: #005580; text-decoration: underline; }
+
+      /* stats */
+      #fps, #ms { background: transparent !important; }
+      #fpsText, #msText { color: #aaa !important; }
+      #fpsGraph, #msGraph { display: none; }
+
+      #texture { position: absolute; top: 50%; left: 80px; margin-top: -80px; width: 320px; height: 160px; border: 1px solid #333; background: url('images/planets/earth_atmos_2048.jpg') no-repeat; background-size: contain; }
+
+      .uv-map { position: absolute; top: 50%; right: 80px; margin-top: -160px; opacity: 1; width: 320px; height: 320px; border: 1px solid #333; background-size: 320px 320px; }
+
+      .color-map { background-image: url('images/planets/earth_atmos_2048.jpg'); }
+
+      .uv-map:before { position: absolute; content: '(0, 0)'; left: -25px; bottom: -25px; }
+      .uv-map:after { position: absolute; content: '(1, 1)'; right: -25px; top: -25px; }
+
+      .uv-map canvas { position: absolute; max-width: 100%; }
+      .uv-map img { position: absolute; max-width: 100%; }
+    </style>
+
+  </head>
+
+  <body>
+
+    <div id="container"></div>
+    
+    <div id="texture"></div>
+
+    <script src="three/three.min.js"></script>
+    <script src="three/controls/OrbitControls.js"></script>
+    <script src="three/Detector.js"></script>
+    <script src="three/libs/stats.min.js"></script>
+    <!-- <script src="three/libs/dat.gui.min.js"></script> -->
+    <script src="three/libs/tween.min.js"></script>
+
+    <script src="three/UVsUtils.js"></script>
+
+    <script>
+
+      if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+
+      var container, stats;
+
+      var camera, controls, scene, renderer;
+
+      var helper, mesh, colorMap, specMap, whiteMap;
+
+      var mouseX = 0, mouseY = 0;
+
+      var clock = new THREE.Clock();
+
+      var windowHalfX = window.innerWidth / 2;
+      var windowHalfY = window.innerHeight / 2;
+
+      var FLOOR = -110;
+
+      // https://www.udacity.com/course/viewer#!/c-cs291/l-124106595/m-176364092
+
+      // http://solutiondesign.com/webgl-and-three-js-texture-mapping/
+      
+      // The faceVertexUvs property of geometry is an array of arrays that
+      // contains the coordinate mapping for each face of the geometry.
+      
+      // mesh.geometry.faceVertexUvs[0][0] = [ bricks[0], bricks[1], bricks[3] ];
+
+      // mesh.material.map.wrapS = mesh.material.wrapS = THREE.RepeatWrapping;
+      // mesh.material.map.repeat.set(2,2);
+
+      // mesh.material.map.offset.set(x,y);
+
+
+      function test(geometry) {
+        var d = document.createElement('div');
+        d.className = "uv-map";
+        // d.innerHTML = name + '<br>';
+
+        // var img = document.createElement('img');
+        // img.src = 'models/milk/milk-color-1k.png';
+        // d.appendChild( img );
+
+        d.appendChild( THREE.UVsDebug(geometry, 512) );
+        
+        document.body.appendChild(d);
+      }
+
+
+      init();
+      animate();
+
+      function init() {
+
+        container = document.getElementById( 'container' );
+
+        renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+        renderer.setClearColor( 0x000000, 0 );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
+        camera.position.set(0, 75, 250);
+
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.noKeys = true;
+
+        scene = new THREE.Scene();
+
+
+        // add objects here
+
+
+        // Ambient light
+        var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+        scene.add( light );
+
+
+        // White directional light at half intensity shining from the top.
+        var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+        directionalLight.position.set( 0, 1, 1 );
+        scene.add( directionalLight );
+
+
+        // Ground
+        // helper = new THREE.GridHelper( 200, 40 );
+        // helper.setColors( 0x000000, 0x808080 );
+        // helper.position.y = FLOOR;
+        // scene.add( helper );
+
+
+        var x = document.createElement( "canvas" );
+        var xc = x.getContext( "2d" );
+        x.width = x.height = 128;
+        xc.fillStyle = "white";
+        xc.fillRect( 0, 0, x.width, x.height );
+
+        whiteMap = new THREE.Texture( x );
+        whiteMap.needsUpdate = true;
+
+        specMap = THREE.ImageUtils.loadTexture( "images/planets/earth_specular_2048.jpg" );
+
+        // var texture = THREE.ImageUtils.loadTexture( "images/crate.gif" );
+        colorMap = THREE.ImageUtils.loadTexture( "images/planets/earth_atmos_2048.jpg" );
+        // var material  = new THREE.MeshPhongMaterial( { ambient: 0x777777, color: 0xdddddd, specular: 0xffffff, shininess: 8, shading: THREE.SmoothShading, map: colorMap } );
+        var material  = new THREE.MeshBasicMaterial( { color: 0xffffff, map: whiteMap } );
+
+        // var geometry = new THREE.BoxGeometry( 80, 80, 80 );
+        var geometry = new THREE.SphereGeometry( 60, 32, 24 );
+
+        mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
+
+        test(geometry);
+
+        helper = new THREE.WireframeHelper( mesh, 0xff0000 );
+        scene.add( helper );
+
+        // place these here because model loading is asynchronous
+        // setupTween();
+        // setupGui();
+
+
+
+        container.appendChild( renderer.domElement );
+
+
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        container.appendChild( stats.domElement );
+
+        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+        //
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+      }
+
+
+      // Tween.js
+      // http://sole.github.com/tween.js/examples/03_graphs.html
+      // http://learningthreejs.com/data/tweenjs_for_smooth_animation/tweenjs_for_smooth_animation.html
+      // http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/
+
+      function setupTween() {
+        var update  = function(){ mesh.rotation.y = current.y; }
+
+        var current = { y: 0 };
+        var target = { y: Math.PI / 12 };
+
+        var tween = new TWEEN.Tween(current)
+          .to(target, 1000).delay(4000)
+          .easing(TWEEN.Easing.Cubic.InOut)
+          .onUpdate(update);
+
+        var tween2 = new TWEEN.Tween(current)
+          .to({ y: -Math.PI / 12 }, 1000).delay(4000)
+          .easing(TWEEN.Easing.Cubic.InOut)
+          .onUpdate(update);
+
+        tween.chain(tween2);
+        tween2.chain(tween);
+
+        tween.start();
+      }
+
+      function setupGui() {
+        // dat.GUI debugging -----------------------------------------
+        var gui = new dat.GUI();
+        var f1 = gui.addFolder('mesh rotation');
+        f1.add(mesh.rotation, 'x', 0, 2*Math.PI);
+        f1.add(mesh.rotation, 'y', 0, 2*Math.PI);
+        f1.add(mesh.rotation, 'z', 0, 2*Math.PI);
+        f1.open();
+      }
+
+
+      function onWindowResize() {
+
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+      }
+
+      function onDocumentMouseMove( event ) {
+
+        mouseX = ( event.clientX - windowHalfX );
+        mouseY = ( event.clientY - windowHalfY );
+
+      }
+
+      //
+
+      function animate() {
+        requestAnimationFrame( animate );
+        render();
+        stats.update();
+        TWEEN.update();
+        controls.update();
+      }
+
+      function render() {
+
+        var delta = clock.getDelta();
+
+        // mesh.rotation.y -= 0.006;
+        mesh.rotation.y -= 0.4 * delta;
+
+        renderer.render( scene, camera );
+
+      }
+
+
+
+      var step = 1;
+
+      function applyStep(step) {
+        // console.log(step);
+        if (step == 1) {
+
+          document.querySelector(".uv-map").className = "uv-map";
+        }
+        else if (step == 2) {
+          mesh.material.map = whiteMap;
+          mesh.material.needsUpdate = true;
+
+          document.querySelector(".uv-map").className += " color-map";
+        }
+        else if (step == 3) {
+          mesh.material.map = colorMap;
+          mesh.material.needsUpdate = true;
+          
+          helper.visible = true;
+          document.querySelector(".uv-map canvas").style.display = 'block';
+        }
+        else if (step == 4) {
+          mesh.material.map = colorMap;
+          mesh.material.needsUpdate = true;
+
+          helper.visible = false;
+          document.querySelector(".uv-map canvas").style.display = 'none';
+          document.querySelector(".uv-map").className += " color-map";
+        }
+      }
+
+      onmessage = function(e) {
+        // paused = (e.data == 'pause' || e.data == 'slide:stop');
+        step = e.data.director.args[0];
+        applyStep( step );
+      };
+
+      function forward() {
+        step++;
+        if (step > 4) { step = 4; return; }
+        applyStep(step);
+      }
+
+      function back() {
+        step--;
+        if (step <= 0) { step = 1; return; }
+        applyStep(step);
+      }
+
+      // Controls for stand-alone
+      window.addEventListener('keydown', function (e) {
+        if (e.keyCode == 38 || e.keyCode == 37) back();
+        if (e.keyCode == 40 || e.keyCode == 39) forward();
+      });
+      
+
+    </script>
+
+
+  </body>
+</html>

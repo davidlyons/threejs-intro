@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Three.js Vertices</title>
+    
+    <style type="text/css">
+      html { overflow: hidden; }
+      body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
+
+      a { color: #0088cc; text-decoration: none; }
+      a:hover, a:focus { color: #005580; text-decoration: underline; }
+
+      /* stats */
+      #fps, #ms { background: transparent !important; }
+      #fpsText, #msText { color: #aaa !important; }
+      #fpsGraph, #msGraph { display: none; }
+    </style>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      if (document.location.hostname != 'localhost') {
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-34432087-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      }
+    </script>
+
+  </head>
+
+  <body>
+
+    <div id="container"></div>
+    
+    <script src="three/three.min.js"></script>
+    <script src="three/cameras/CombinedCamera.js"></script>
+    <script src="three/controls/OrbitControls.js"></script>
+    <script src="three/Detector.js"></script>
+    <script src="three/libs/stats.min.js"></script>
+    <script src="three/libs/dat.gui.min.js"></script>
+    <script src="three/libs/tween.min.js"></script>
+
+    <script>
+
+      if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+
+      var container;
+
+      var stats;
+
+      var camera, controls, scene, renderer;
+
+      var group, mesh, geometry, light;
+
+      var helper, wfh, verts;
+
+      var mouseX = 0, mouseY = 0;
+
+      var windowHalfX = window.innerWidth / 2;
+      var windowHalfY = window.innerHeight / 2;
+
+      init();
+      animate();
+
+      function init() {
+        scene = new THREE.Scene();
+
+        container = document.getElementById( 'container' );
+
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
+        // camera = new THREE.OrthographicCamera( -windowHalfX, windowHalfX, windowHalfY, -windowHalfY, - 500, 1000 );
+        camera.position.y = 75;
+        camera.position.z = 250;
+        camera.lookAt( scene.position );
+
+        // add objects here
+
+
+        // var helper = new THREE.GridHelper( 100, 20 );
+        // helper.position.y = -100;
+        // scene.add( helper );
+
+        var ambLight = new THREE.AmbientLight( 0x444444 );
+        scene.add( ambLight );
+
+        light = new THREE.DirectionalLight( 0xdddddd, .8 );
+        light.position.set( -80, 80, 80 );
+        scene.add( light );
+
+        group = new THREE.Object3D();
+        scene.add( group );
+
+        // materials
+        var material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, shininess: 40, shading: THREE.FlatShading, transparent: true, opacity: 0 });
+        // var material = new THREE.MeshBasicMaterial({ color: 0xcccccc, transparent: true, opacity: 0 });
+
+        // geometry = new THREE.SphereGeometry( 60, 24, 16 );
+        geometry = new THREE.BoxGeometry( 60, 60, 60, 1, 1, 1 );
+
+        mesh = new THREE.Mesh( geometry, material );
+        // mesh.visible = false;
+        group.add( mesh );
+
+        wfh = new THREE.WireframeHelper( mesh, 0x000000 );
+        wfh.material.transparent = true;
+        wfh.material.opacity = 0.1;
+        // wfh.visible = false;
+        group.add( wfh );
+
+        var pMaterial = new THREE.PointCloudMaterial({ color: 0xff0000, size: 6 });
+        verts = new THREE.PointCloud( geometry.clone(), pMaterial );
+        group.add( verts );
+
+
+        renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+        // renderer.setClearColor( 0xBBBBBB, 1 );
+        renderer.setClearColor( 0x000000, 0 ); // the default
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        container.appendChild( renderer.domElement );
+
+
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        controls.noKeys = true;
+
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        container.appendChild( stats.domElement );
+
+        // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+        //
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+      }
+
+
+      function setupGui() {
+        // dat.GUI debugging -----------------------------------------
+        var gui = new dat.GUI();
+        var f1 = gui.addFolder('meshOuter rotation');
+        f1.add(mesh.position, 'x', 0, 2*Math.PI);
+        f1.add(mesh.position, 'y', 0, 2*Math.PI);
+        f1.add(mesh.position, 'z', 0, 2*Math.PI);
+        f1.open();
+      }
+
+
+      function onWindowResize() {
+
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+
+        // Perspective
+        camera.aspect = window.innerWidth / window.innerHeight;
+
+        // Orthographic
+        // camera.left = -windowHalfX;
+        // camera.right = windowHalfX;
+        // camera.top = windowHalfY;
+        // camera.bottom = -windowHalfY;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );  
+      }
+
+      function onDocumentMouseMove( event ) {
+
+        mouseX = ( event.clientX - windowHalfX );
+        mouseY = ( event.clientY - windowHalfY );
+
+        // document.getElementById('mouse').innerText = mouseX + ', ' + mouseY;
+
+      }
+
+      //
+
+      var paused = false;
+
+      function animate() {
+        requestAnimationFrame( animate );
+        if (!paused) {
+          render();
+          stats.update();
+          // controls.update();
+          TWEEN.update();
+        }
+      }
+
+      function render() {
+
+        // var speed = 2;
+
+        if (mesh) {
+          group.rotation.y -= 0.003;
+        }
+
+        // console.log('render cube');
+
+        renderer.render( scene, camera );
+      }
+
+
+      // --------
+
+
+      function setupTween(obj, prop, targetValue) {
+        var update  = function(){
+          obj[prop] = current.property;
+        }
+
+        var current = { property: obj[prop] };
+        var target = { property: targetValue };
+
+        var tween = new TWEEN.Tween(current).to(target, 800)
+          .easing(TWEEN.Easing.Cubic.Out)
+          .onUpdate(update);
+
+        tween.start();
+      }
+      
+
+      var step = 1;
+
+
+      function applyStep(step) {
+        // console.log(step);
+        
+        if   (step == 1) {
+          verts.material.color.setHex(0xff0000);
+          
+          // wfh.visible = false;
+          // wfh.material.color.setHex(0x000000);
+          setupTween(wfh.material.color, 'r', 0);
+          setupTween(wfh.material, 'opacity', 0.1);
+          setupTween(verts.material, 'size', 6);
+        }
+        else if (step == 2) {
+          // wfh.visible = true;
+          // wfh.material.color.setHex(0xff0000);
+          setupTween(wfh.material.color, 'r', 1);
+          setupTween(wfh.material, 'opacity', 1);
+
+          verts.material.color.setHex(0x333333);
+          setupTween(verts.material, 'size', 3);
+
+          // mesh.visible = false;
+          setupTween(mesh.material, 'opacity', 0);
+        }
+        else if (step == 3) {
+          setupTween(wfh.material.color, 'r', 0);
+          // setupTween(wfh.material, 'opacity', 0.1);
+          
+          // mesh.visible = true;
+          setupTween(mesh.material.color, 'r', 1);
+          setupTween(mesh.material, 'opacity', 1);
+        }
+      }
+
+      onmessage = function(e) {
+        // paused = (e.data == 'pause' || e.data == 'slide:stop');
+        step = e.data.mathBoxDirector.args[0];
+        applyStep( step );
+      };
+
+      function forward() {
+        step++;
+        if (step > 3) { step = 3; return; }
+        applyStep(step);
+      }
+
+      function back() {
+        step--;
+        if (step <= 0) { step = 1; return; }
+        applyStep(step);
+      }
+
+      // Controls for stand-alone
+      window.addEventListener('keydown', function (e) {
+        if (e.keyCode == 38 || e.keyCode == 37) back();
+        if (e.keyCode == 40 || e.keyCode == 39) forward();
+      });
+
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - interactive cubes</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="three/three.min.js"></script>
+		<script src="three/controls/OrbitControls.js"></script>
+		<script src="three/libs/stats.min.js"></script>
+		<script src="three/libs/dat.gui.min.js"></script>
+
+		<script>
+
+			var container, stats;
+			var camera, controls, scene, projector, raycaster, renderer;
+			var mesh;
+
+			var mouse = new THREE.Vector2(), INTERSECTED;
+			var radius = 100, theta = 0;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				var info = document.createElement( 'div' );
+				info.style.position = 'absolute';
+				info.style.top = '10px';
+				info.style.width = '100%';
+				info.style.textAlign = 'center';
+				info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> webgl - interactive cubes';
+				container.appendChild( info );
+
+				renderer = new THREE.WebGLRenderer({ antialias: true });
+				renderer.setClearColor( 0xf0f0f0 );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.sortObjects = false;
+				container.appendChild(renderer.domElement);
+
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.z = 1000;
+
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+				scene = new THREE.Scene();
+
+				var aLight = new THREE.AmbientLight( 0x444444 );
+				scene.add( aLight )
+
+				var light = new THREE.DirectionalLight( 0xffffff, 0.9 );
+				light.position.set( 1, 1, 1 ).normalize();
+				scene.add( light );
+
+				var light = new THREE.DirectionalLight( 0xffffff, 0.9 );
+				light.position.set( -1, -1, -1 ).normalize();
+				scene.add( light );
+
+				var geometry = new THREE.BoxGeometry( 60, 60, 60 );
+
+				for ( var i = 0; i < 250; i ++ ) {
+
+					// var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+					var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0xaaaaaa } ) );
+
+					object.position.x = Math.random() * 800 - 400;
+					object.position.y = Math.random() * 800 - 400;
+					object.position.z = Math.random() * 800 - 400;
+
+					object.rotation.x = Math.random() * 2 * Math.PI;
+					object.rotation.y = Math.random() * 2 * Math.PI;
+					object.rotation.z = Math.random() * 2 * Math.PI;
+
+					// object.scale.x = Math.random() + 0.5;
+					// object.scale.y = Math.random() + 0.5;
+					// object.scale.z = Math.random() + 0.5;
+
+					scene.add( object );
+
+				}
+
+
+				// CURSOR / raycaster helper object
+
+				// var map = THREE.ImageUtils.loadTexture( "images/cursor-centered.png" );
+
+				// var cursorGeo = new THREE.PlaneGeometry( 150, 150, 1, 1 );
+
+				// var cursorMat = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, map: map, transparent: true } );
+
+				// mesh = new THREE.Mesh( cursorGeo, cursorMat );
+				
+				mesh = new THREE.Mesh( new THREE.BoxGeometry( 40, 40, 40 ), new THREE.MeshNormalMaterial() );
+
+				mesh.position.set( -200, -200, 500 );
+				scene.add(mesh);
+
+				mesh.add( new THREE.AxisHelper( 50 ) );
+
+				var arrowHelper = new THREE.ArrowHelper( new THREE.Vector3(0,0,-1), new THREE.Vector3(0,0,0), 1100, 0xff0000, 70 );
+				mesh.add( arrowHelper );
+
+				setupGui();
+
+
+
+				projector = new THREE.Projector();
+				raycaster = new THREE.Raycaster();
+
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild( stats.domElement );
+
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function setupGui() {
+			  // dat.GUI debugging -----------------------------------------
+			  var gui = new dat.GUI();
+			  var f1 = gui.addFolder('mesh position');
+			  f1.add(mesh.position, 'x', -400, 400);
+			  f1.add(mesh.position, 'y', -400, 400);
+			  f1.open();
+			  
+			  var f2 = gui.addFolder('mesh rotation');
+			  f2.add(mesh.rotation, 'x', -Math.PI/4, Math.PI/4);
+			  f2.add(mesh.rotation, 'y', -Math.PI/4, Math.PI/4);
+			  f2.open();
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onDocumentMouseMove( event ) {
+
+				event.preventDefault();
+
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+				controls.update();
+
+			}
+
+			function render() {
+
+				// theta += 0.1;
+
+				// camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+				// camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+				// camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+				// camera.lookAt( scene.position );
+
+				// find intersections
+
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				projector.unprojectVector( vector, camera );
+
+				// raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+
+				// ----
+
+				var matrix = new THREE.Matrix4();
+				matrix.extractRotation( mesh.matrix );
+
+				var direction = new THREE.Vector3( 0, 0, -1 );
+				direction = direction.applyMatrix4( matrix );
+
+				raycaster.set( mesh.position, direction );
+
+				// ----
+
+				var intersects = raycaster.intersectObjects( scene.children );
+
+				if ( intersects.length > 0 ) {
+
+					if ( INTERSECTED != intersects[ 0 ].object ) {
+
+						if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+
+						INTERSECTED = intersects[ 0 ].object;
+						INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+						INTERSECTED.material.color.setHex( 0xff0000 );
+
+					}
+
+				} else {
+
+					if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+
+					INTERSECTED = null;
+
+				}
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>

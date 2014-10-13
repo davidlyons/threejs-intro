@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - interactive cubes</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			/* stats */
+			#fps, #ms { background: transparent !important; }
+			#fpsText, #msText { color: #aaa !important; }
+			#fpsGraph, #msGraph { display: none; }
+		</style>
+	</head>
+	<body>
+
+		<script src="three/three.min.js"></script>
+		<script src="three/controls/OrbitControls.js"></script>
+		<script src="three/libs/stats.min.js"></script>
+		<script src="three/libs/dat.gui.min.js"></script>
+		<script src="three/libs/tween.min.js"></script>
+
+		<script>
+
+			var container, stats;
+			var camera, cameraPerspective, cameraPerspectiveHelper, cameraRig, controls
+			var scene, projector, raycaster, renderer;
+			var cursor, group;
+
+			var range = 400;
+
+			var grid;
+
+			var mouse = new THREE.Vector2(), INTERSECTED;
+			var radius = 100, theta = 0;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				renderer = new THREE.WebGLRenderer({ antialias: true });
+				renderer.setClearColor( 0xf0f0f0 );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.sortObjects = false;
+				container.appendChild(renderer.domElement);
+
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.set( -700, 50, 50 );
+
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.noKeys = true;
+
+				scene = new THREE.Scene();
+
+
+				// Camera Helper
+
+				cameraPerspective = new THREE.PerspectiveCamera( 60, 16 / 9, 150, 1500 );
+
+				cameraPerspectiveHelper = new THREE.CameraHelper( cameraPerspective );
+				scene.add( cameraPerspectiveHelper );
+				cameraPerspectiveHelper.visible = false;
+
+
+
+				// counteract different front orientation of cameras vs rig
+
+				// cameraPerspective.rotation.y = Math.PI;
+
+				cameraRig = new THREE.Object3D();
+
+				cameraRig.add( cameraPerspective );
+
+				cameraRig.position.z = range + 150;
+
+				scene.add( cameraRig );
+
+
+
+				// Lights
+
+				var aLight = new THREE.AmbientLight( 0x444444 );
+				scene.add( aLight )
+
+				var light = new THREE.DirectionalLight( 0xffffff, 0.9 );
+				light.position.set( 1, 1, 1 ).normalize();
+				scene.add( light );
+
+				var light = new THREE.DirectionalLight( 0xffffff, 0.9 );
+				light.position.set( -1, -1, -1 ).normalize();
+				scene.add( light );
+
+				var geometry = new THREE.BoxGeometry( 30, 30, 30 );
+
+				group = new THREE.Object3D();
+				scene.add( group );
+
+				for ( var i = 0; i < 150; i ++ ) {
+
+					var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0xaaaaaa } ) );
+
+					object.position.x = range * (0.5 - Math.random());
+					object.position.y = range * (0.5 - Math.random());
+					object.position.z = range * (0.5 - Math.random());
+
+					object.rotation.x = Math.random() * 2 * Math.PI;
+					object.rotation.y = Math.random() * 2 * Math.PI;
+					object.rotation.z = Math.random() * 2 * Math.PI;
+
+					group.add( object );
+
+				}
+
+
+
+				var screenPosition = range;
+
+				// cursor helper
+				var cursorGeo = new THREE.PlaneGeometry( 70, 70, 1, 1 );
+				var map = THREE.ImageUtils.loadTexture( "images/cursor-centered.png" );
+				var cursorMat = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, map: map, transparent: true } );
+				cursor = new THREE.Mesh( cursorGeo, cursorMat );
+
+				cursor.position.set( -40, -20, screenPosition );
+				scene.add(cursor);
+
+				// cursor.add( new THREE.AxisHelper( 30 ) );
+				
+				// screen helper
+				grid = new THREE.GridHelper( 9.5, 19 );
+				grid.rotation.x = Math.PI/2;
+				grid.scale.x *= 16;
+				grid.scale.z *= 9;
+				grid.position.z = screenPosition;
+				scene.add( grid );
+
+				// ray helper
+				var arrowHelper = new THREE.ArrowHelper( new THREE.Vector3(0,0,-1), new THREE.Vector3(0,0,0), 1100, 0xff0000, 70 );
+				cursor.add( arrowHelper );
+
+
+
+				projector = new THREE.Projector();
+				raycaster = new THREE.Raycaster();
+
+				// setupGui();
+
+				var tween = new TWEEN.Tween(cursor.position)
+										.to({ x: -130 }, 2000)
+									  .delay( 2000 );
+
+				var tween2 = new TWEEN.Tween(cursor.position)
+										.to({ x: 130 }, 2000)
+									  .delay( 1000 );
+
+				tween.chain( tween2 );
+				tween2.chain( tween );
+
+				tween.start();
+
+
+
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.top = '0px';
+				container.appendChild( stats.domElement );
+
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function setupGui() {
+			  // dat.GUI debugging -----------------------------------------
+			  var gui = new dat.GUI();
+			  var f1 = gui.addFolder('cursor position');
+			  f1.add(cursor.position, 'x', -range/2, range/2);
+			  f1.add(cursor.position, 'y', -range/2, range/2);
+			  f1.open();
+			  
+			  var f2 = gui.addFolder('cursor rotation');
+			  f2.add(cursor.rotation, 'x', -Math.PI/4, Math.PI/4);
+			  f2.add(cursor.rotation, 'y', -Math.PI/4, Math.PI/4);
+			  f2.open();
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onDocumentMouseMove( event ) {
+
+				event.preventDefault();
+
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+				controls.update();
+				TWEEN.update();
+			}
+
+			function render() {
+
+				// theta += 0.1;
+
+				// camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+				// camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+				// camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+				// camera.lookAt( scene.position );
+
+				// find intersections
+
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				projector.unprojectVector( vector, camera );
+
+				// raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+
+				// ----
+
+				// this code is not for actual mouse interaction
+				// this is only for demonstration purposes
+
+				var matrix = new THREE.Matrix4();
+				matrix.extractRotation( cursor.matrix );
+
+				var direction = new THREE.Vector3( 0, 0, -1 );
+				direction = direction.applyMatrix4( matrix );
+
+				raycaster.set( cursor.position, direction );
+
+				// ----
+
+				var intersects = raycaster.intersectObjects( group.children );
+
+				// if ( intersects.length > 0 ) {
+
+				// 	if ( INTERSECTED != intersects[ 0 ].object ) {
+
+				// 		if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+
+				// 		INTERSECTED = intersects[ 0 ].object;
+				// 		INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+				// 		INTERSECTED.material.color.setHex( 0xff0000 );
+
+				// 	}
+
+				// } else {
+
+				// 	if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+
+				// 	INTERSECTED = null;
+
+				// }
+
+				group.children.forEach(function( cube ) {
+				  cube.material.color.setHex( 0xaaaaaa );
+				});
+
+				  
+				for( var i = 0; i < intersects.length; i++ ) {
+				  var intersection = intersects[ i ];
+				  var obj = intersection.object;
+
+				  // obj.material.color.setRGB( 1.0 - i / intersects.length, 0, 0 );
+				  
+				  var red = i == 0 ? 1.0 : 0.5;
+				  obj.material.color.setRGB( red, 0, 0 );
+				}
+
+				renderer.render( scene, camera );
+
+			}
+
+
+
+
+
+			function setupTween(obj, prop, targetValue) {
+			  var update  = function(){
+			    obj[prop] = current.property;
+			  }
+			  
+			  var current = { property: obj[prop] };
+			  var target = { property: targetValue };
+
+			  var tween = new TWEEN.Tween(current).to(target, 800)
+			    .easing(TWEEN.Easing.Cubic.Out)
+			    .onUpdate(update);
+
+			  tween.start();
+			}
+
+			var step = 1;
+
+			function applyStep(step) {
+			  // console.log(step);
+			  if (step == 1){
+			  	cameraPerspectiveHelper.visible = false;
+			  }
+			  else if (step == 2){
+			  	cameraPerspectiveHelper.visible = true;
+			  }
+			  else if (step == 3){
+			  	cameraPerspectiveHelper.visible = false;
+			  }
+			}
+
+			onmessage = function(e) {
+			  // paused = (e.data == 'pause' || e.data == 'slide:stop');
+			  step = e.data.director.args[0];
+			  applyStep( step );
+			};
+
+			function forward() {
+			  step++;
+			  if (step > 3) { step = 3; return; }
+			  applyStep(step);
+			}
+
+			function back() {
+			  step--;
+			  if (step <= 0) { step = 1; return; }
+			  applyStep(step);
+			}
+
+			// Controls for stand-alone
+			window.addEventListener('keydown', function (e) {
+			  if (e.keyCode == 38 || e.keyCode == 37) back();
+			  if (e.keyCode == 40 || e.keyCode == 39) forward();
+			});
+
+
+
+
+		</script>
+
+	</body>
+</html>

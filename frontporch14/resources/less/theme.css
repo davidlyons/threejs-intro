@@ -1,0 +1,301 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  padding-top: 10px;
+  background: #ddd;
+}
+a {
+  color: #428bca;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  color: #2a6496;
+  text-decoration: underline;
+}
+a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.deck-container {
+  background: #f8f8f8;
+  /*border: 1px solid #000;*/
+  text-align: center;
+  margin: 0 auto;
+  min-height: 0;
+  overflow-y: hidden;
+  font-size: 35px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -640px;
+  margin-top: -360px;
+  /*margin-top: -390px;*/
+  /* online? */
+}
+.deck-menu {
+  overflow: auto;
+}
+.deck-menu > .deck-current,
+.deck-menu > .deck-child-current {
+  outline: 10px solid teal;
+}
+.deck-container,
+.deck-container > .slide {
+  width: 1280px;
+  height: 720px;
+}
+.deck-container > .slide {
+  padding: 20px 115px;
+}
+.slide {
+  width: 100%;
+  color: #333;
+}
+.page-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: table;
+}
+.cover-title {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 96px;
+  line-height: 1;
+}
+.cover-inverted {
+  color: #fff;
+  text-shadow: 4px 4px 1px rgba(0, 0, 0, 0.7);
+}
+.cover-title small {
+  font-size: 60%;
+  display: block;
+}
+h2 {
+  margin: 0;
+  padding-top: 20px;
+  font-size: 56px;
+}
+img.spotlight,
+video.spotlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+pre {
+  margin: 0;
+}
+code {
+  font-family: 'Source Code Pro', monospace;
+}
+/* TEMP: hide past subitem if marked */
+.deck-container > .slide .deck-before.temp,
+.deck-container > .slide .deck-previous.temp,
+.deck-container > .slide.deck-before .temp:not(.slide),
+.deck-container > .slide.deck-previous .temp:not(.slide) {
+  opacity: 0;
+  position: absolute;
+  /*.transition-transform-opacity(300ms);*/
+}
+.deck-container > .slide .deck-current.temp,
+.deck-container > .slide.deck-current .temp:not(.slide) {
+  position: relative;
+}
+.temp pre[class*="language-"] {
+  background: rgba(245, 242, 240, 0.8);
+}
+.slide.abs-bc,
+.abs-bc {
+  width: 100%;
+  position: absolute !important;
+  top: auto;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 20;
+}
+.slide.abs-tc,
+.abs-tc {
+  width: 100%;
+  position: absolute !important;
+  top: auto;
+  top: 30px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 20;
+}
+.deck-container .bc-text {
+  bottom: 50px;
+  padding: 35px 0;
+}
+.outline {
+  text-shadow: 3px 0px 1px #ffffff, -3px 0px 1px #ffffff, 0px -3px 1px #ffffff, 0px 3px 1px #ffffff, 2px 2px 1px #ffffff, -2px 2px 1px #ffffff, 2px -2px 1px #ffffff, -2px -2px 1px #ffffff, 3px 2px 1px #ffffff, -3px 2px 1px #ffffff, 3px -2px 1px #ffffff, -3px -2px 1px #ffffff, 1px 3px 1px #ffffff, -1px 3px 1px #ffffff, 1px -3px 1px #ffffff, -1px -3px 1px #ffffff, -1px -1px 1px #ffffff, -1px 1px 1px #ffffff, 1px -1px 1px #ffffff, 1px 1px 1px #ffffff;
+}
+.overlay-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 !important;
+}
+.deck-prev-link,
+.deck-next-link {
+  line-height: 29px;
+}
+.deck-status {
+  font-size: 18px;
+  right: 10px;
+  text-shadow: 0 0 1px #fff;
+  position: absolute;
+}
+.on-slide-scene-required .scene-required,
+.on-slide-scene-object .scene-object,
+.on-slide-render-loop .render-loop {
+  font-weight: 700;
+  background: #eee;
+}
+#camera-demo {
+  transition: height 400ms, top 400ms;
+}
+.on-slide-camera-iframe-resize #camera-demo {
+  top: 150px;
+  height: 50%;
+}
+.on-slide-interaction1 .interaction1,
+.on-slide-interaction2 .interaction2,
+.on-slide-interaction3 .interaction3,
+.on-slide-interaction4 .interaction4 {
+  font-weight: 700;
+}
+/* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+python */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: black;
+  text-shadow: 0 1px white;
+  font-family: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', monospace;
+  direction: ltr;
+  text-align: left;
+  word-spacing: normal;
+  word-break: normal;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  white-space: pre;
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+pre[class*="language-"]::-moz-selection,
+pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection {
+  text-shadow: none;
+  background: #b3d4fc;
+}
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection,
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection {
+  text-shadow: none;
+  background: #b3d4fc;
+}
+@media print {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    text-shadow: none;
+  }
+}
+code[class*="language-"] {
+  font-size: 34px;
+}
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 1em;
+  margin: .5em 0;
+  overflow: auto;
+}
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #f5f2f0;
+}
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+}
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: slategray;
+}
+.token.punctuation {
+  color: #999;
+}
+.namespace {
+  opacity: .7;
+}
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #905;
+}
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.builtin {
+  color: #690;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #a67f59;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #07a;
+}
+.token.function {
+  color: #DD4A68;
+}
+.token.regex,
+.token.important {
+  color: #e90;
+}
+.token.important {
+  font-weight: bold;
+}
+.token.entity {
+  cursor: help;
+}

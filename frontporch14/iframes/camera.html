@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Three.js Cameras</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				color: #808080;
+				font-family:Monospace;
+				font-size:13px;
+				text-align:center;
+
+				/*background-color: #eee;*/
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#stats { position: absolute; top:0; left: 0 }
+			#stats #fps { background: transparent !important }
+			#stats #fps #fpsText { color: #777 !important }
+			#stats #fps #fpsGraph { display: none }
+		</style>
+	</head>
+	<body>
+
+		<script src="three/three.min.js"></script>
+		<script src="three/controls/OrbitControls.js"></script>
+		<script src="three/libs/stats.min.js"></script>
+		<script src="three/libs/tween.min.js"></script>
+
+		<script>
+
+			var SCREEN_WIDTH = window.innerWidth;
+			var SCREEN_HEIGHT = window.innerHeight;
+
+			var container, stats;
+			var camera, scene, renderer, mesh, grid, controls;
+			var cameraRig, activeCamera, activeHelper;
+			var cameraPerspective, cameraOrtho;
+			var cameraPerspectiveHelper, cameraOrthoHelper;
+
+			// -----
+
+				var frustum, camHelperVerts, pointMap, frustumVerts;
+
+				var topMap    = ['f3','f4','n3','n4'];
+				var bottomMap = ['f1','f2','n1','n2'];
+				var leftMap   = ['f3','n3','f1','n1'];
+				var rightMap  = ['n4','f4','n2','f2'];
+				var nearMap   = ['n3','n4','n1','n2'];
+				var farMap    = ['f3','f4','f1','f2'];
+				var currentMap = topMap;
+
+				function moveFrustumVerts(map){
+				  for (var i = 0; i <= 3; i++) {
+				   frustumVerts[i].copy( camHelperVerts[ pointMap[ map[i] ][0] ] );
+				  }			  
+				  frustum.geometry.verticesNeedUpdate = true;
+					currentMap = map;
+				}
+
+			// -----
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				scene = new THREE.Scene();
+
+				//
+
+
+				cameraPerspective = new THREE.PerspectiveCamera( 50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 150, 1200 );
+				cameraPerspective.fov = 15;
+
+				cameraPerspectiveHelper = new THREE.CameraHelper( cameraPerspective );
+				scene.add( cameraPerspectiveHelper );
+
+				camera = new THREE.PerspectiveCamera( 50, 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000 );
+				camera.position.y = 600;
+				camera.position.z = 2500;
+				// camera.lookAt( cameraPerspective.position );
+
+				//
+
+				cameraOrtho = new THREE.OrthographicCamera( 0.5 * SCREEN_WIDTH / - 2, 0.5 * SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / - 2, 150, 3000 );
+
+				cameraOrthoHelper = new THREE.CameraHelper( cameraOrtho );
+				scene.add( cameraOrthoHelper );
+
+				//
+
+				activeCamera = cameraPerspective;
+				activeHelper = cameraPerspectiveHelper;
+
+
+				// counteract different front orientation of cameras vs rig
+
+				cameraOrtho.rotation.y = Math.PI;
+				cameraPerspective.rotation.y = Math.PI;
+
+				cameraRig = new THREE.Object3D();
+
+				cameraRig.add( cameraPerspective );
+				cameraRig.add( cameraOrtho );
+
+				cameraRig.position.set(-300,400,500);
+
+				scene.add( cameraRig );
+
+				// ------------------------
+
+				var frustumGeo = new THREE.PlaneGeometry( 500, 500, 1, 1 );
+				var frustumMat = new THREE.MeshBasicMaterial({ color: 0xff0000,
+					transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+				frustum = new THREE.Mesh( frustumGeo, frustumMat );
+				activeHelper.add( frustum );
+				frustum.visible = false;
+
+				camHelperVerts = activeHelper.geometry.vertices;
+				pointMap = activeHelper.pointMap;
+				frustumVerts = frustum.geometry.vertices;
+
+				moveFrustumVerts(topMap);
+
+				// ------------------------
+
+				grid = new THREE.GridHelper( 3000, 20 );
+				grid.material.transparent = true;
+				grid.setColors( 0x555555, 0xbbbbbb );
+				// grid.position.y = -200;
+				scene.add( grid );
+
+				// white
+				// mesh = new THREE.Mesh( new THREE.SphereGeometry( 100, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } ) );
+				// TODO: Set to zero and offset camera
+				// mesh.position.set( 650, -270, -270 );
+				// mesh.position.multiplyScalar(1.5);
+				// scene.add( mesh );
+
+				// red
+				mesh = new THREE.Mesh( new THREE.SphereGeometry( 50, 20, 12), new THREE.MeshNormalMaterial() );
+				mesh.position.y = 60;
+				scene.add( mesh );
+
+				// blue
+				var mesh3 = new THREE.Mesh( new THREE.SphereGeometry( 5, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0x0000ff, wireframe: true } ) );
+				mesh3.position.z = 150;
+				// cameraRig.add( mesh3 );
+
+				//
+
+				var geometry = new THREE.Geometry();
+
+				for ( var i = 0; i < 10000; i ++ ) {
+
+					var vertex = new THREE.Vector3();
+					vertex.x = THREE.Math.randFloatSpread( 2000 );
+					vertex.y = THREE.Math.randFloatSpread( 2000 );
+					vertex.z = THREE.Math.randFloatSpread( 2000 );
+
+					geometry.vertices.push( vertex );
+
+				}
+
+				// var particles = new THREE.PointCloud( geometry, new THREE.PointCloudMaterial( { color: 0x888888 } ) );
+				// scene.add( particles );
+
+				//
+
+
+				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+				renderer.setClearColor( 0xeeeeee, 1 ); // the default
+				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+				renderer.domElement.style.position = "relative";
+				container.appendChild( renderer.domElement );
+
+				renderer.autoClear = false;
+
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.noKeys = true;
+
+				//
+
+				stats = new Stats();
+				container.appendChild( stats.domElement );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			//
+
+			function onWindowResize( event ) {
+
+				SCREEN_WIDTH = window.innerWidth;
+				SCREEN_HEIGHT = window.innerHeight;
+
+				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+				camera.aspect = 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT;
+				camera.updateProjectionMatrix();
+
+				cameraPerspective.aspect = 0.5 * SCREEN_WIDTH / SCREEN_HEIGHT;
+				cameraPerspective.updateProjectionMatrix();
+
+				cameraOrtho.left   = - 0.5 * SCREEN_WIDTH / 2;
+				cameraOrtho.right  =   0.5 * SCREEN_WIDTH / 2;
+				cameraOrtho.top    =   SCREEN_HEIGHT / 2;
+				cameraOrtho.bottom = - SCREEN_HEIGHT / 2;
+				cameraOrtho.updateProjectionMatrix();
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+				TWEEN.update();
+				// controls.update();
+			}
+
+
+			function render() {
+
+				var r = Date.now() * 0.0005;
+
+				// mesh.position.x = 700 * Math.cos( r );
+				// mesh.position.z = 700 * Math.sin( r );
+				// mesh.position.y = 700 * Math.sin( r );
+
+				// mesh.children[ 0 ].position.x = 70 * Math.cos( 2 * r );
+				// mesh.children[ 0 ].position.z = 70 * Math.sin( r );
+
+				if ( activeCamera === cameraPerspective ) {
+
+					// cameraPerspective.fov = 35 + 30 * Math.sin( 0.5 * r );
+					// cameraPerspective.far = mesh.position.length();
+					cameraPerspective.updateProjectionMatrix();
+
+					cameraPerspectiveHelper.update();
+					cameraPerspectiveHelper.visible = true;
+
+					cameraOrthoHelper.visible = false;
+
+				} else {
+
+					// cameraOrtho.far = mesh.position.length();
+					cameraOrtho.updateProjectionMatrix();
+
+					cameraOrthoHelper.update();
+					cameraOrthoHelper.visible = true;
+
+					cameraPerspectiveHelper.visible = false;
+
+				}
+
+				cameraRig.lookAt( mesh.position );
+
+				renderer.clear();
+
+				activeHelper.visible = false;
+				grid.material.opacity = 1;
+
+				renderer.setViewport( SCREEN_WIDTH/2, 0, SCREEN_WIDTH/2, SCREEN_HEIGHT );
+				renderer.render( scene, activeCamera );
+
+				activeHelper.visible = true;
+				grid.material.opacity = 0.2;
+
+				renderer.setViewport( 0, 0, SCREEN_WIDTH/2, SCREEN_HEIGHT );
+				renderer.render( scene, camera );
+
+			}
+
+
+			function setupTween(obj, prop, targetValue) {
+			  var update  = function(){
+			    obj[prop] = current.property;
+			    moveFrustumVerts( currentMap );
+			  }
+			  
+			  var current = { property: obj[prop] };
+			  var target = { property: targetValue };
+
+			  var tween = new TWEEN.Tween(current).to(target, 800)
+			    .easing(TWEEN.Easing.Cubic.Out)
+			    .onUpdate(update);
+
+			  tween.start();
+			}
+
+
+			var step = 1;
+
+			function applyStep(step) {
+			  // console.log(step);
+
+			  if (step == 1) {
+			  	frustum.visible = false;
+			  }
+			  else if (step == 2) {
+			  	moveFrustumVerts(topMap);
+			  	frustum.visible = true;
+			  }
+			  else if (step == 3) {
+			  	moveFrustumVerts(bottomMap);
+			  	frustum.visible = true;
+			  }
+			  else if (step == 4) {
+			  	frustum.visible = false;
+			  	setupTween(cameraPerspective, 'fov', 15 );
+			  }
+			  else if (step == 5) {
+			  	setupTween(cameraPerspective, 'fov', 65 );
+			  }
+			  else if (step == 6) {
+			  	setupTween(cameraPerspective, 'far', 1200 );
+			  }
+			  else if (step == 7) {
+			  	setupTween(cameraPerspective, 'far', 3000 );
+			  	
+			  	activeCamera = cameraPerspective;
+			  	activeHelper = cameraPerspectiveHelper;
+			  }
+			  else if (step == 8) {
+			  	activeCamera = cameraOrtho;
+			  	activeHelper = cameraOrthoHelper;
+			  }
+			}
+
+			onmessage = function(e) {
+			  // paused = (e.data == 'pause' || e.data == 'slide:stop');
+			  step = e.data.director.args[0];
+			  applyStep( step );
+			};
+
+			function forward() {
+			  step++;
+			  if (step > 8) { step = 8; return; }
+			  applyStep(step);
+			}
+
+			function back() {
+			  step--;
+			  if (step <= 0) { step = 1; return; }
+			  applyStep(step);
+			}
+
+			// Controls for stand-alone
+			window.addEventListener('keydown', function (e) {
+			  if (e.keyCode == 38 || e.keyCode == 37) back();
+			  if (e.keyCode == 40 || e.keyCode == 39) forward();
+
+			  if (e.keyCode == 79) {  /*O*/
+			  	activeCamera = cameraOrtho;
+			  	activeHelper = cameraOrthoHelper;
+			  }
+
+			  if (e.keyCode == 80) {  /*P*/
+			  	activeCamera = cameraPerspective;
+			  	activeHelper = cameraPerspectiveHelper;
+			  }
+			});
+
+		</script>
+
+	</body>
+</html>
