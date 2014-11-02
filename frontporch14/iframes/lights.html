@@ -247,6 +247,7 @@
       function setupTween(obj, prop, targetValue) {
         var update  = function(){
           obj[prop] = current.property;
+          dLight.target.updateMatrixWorld(); // https://github.com/mrdoob/three.js/issues/5555
           dLightHelper.update();
           sLightHelper.update();
         }
