@@ -82,7 +82,7 @@
 				controls.autoRotateSpeed = 2;
 				controls.noKeys = true;
 
-				group = new THREE.Object3D();
+				group = new THREE.Group();
 				scene.add(group);
 
 				// LIGHTS
@@ -143,7 +143,7 @@
 				wfh.material.depthWrite = false;
 				wfh.renderDepth = 1;
 				wfh.visible = false;
-				group.add( wfh );
+				scene.add( wfh );
 
 				//
 

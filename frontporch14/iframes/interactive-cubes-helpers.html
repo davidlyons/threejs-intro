@@ -30,7 +30,7 @@
 
 			var container, stats;
 			var camera, cameraPerspective, cameraPerspectiveHelper, cameraRig, controls
-			var scene, projector, raycaster, renderer;
+			var scene, raycaster, renderer;
 			var cursor, group;
 
 			var range = 400;
@@ -126,7 +126,7 @@
 				var screenPosition = range;
 
 				// cursor helper
-				var cursorGeo = new THREE.PlaneGeometry( 70, 70, 1, 1 );
+				var cursorGeo = new THREE.PlaneBufferGeometry( 70, 70, 1, 1 );
 				var map = THREE.ImageUtils.loadTexture( "images/cursor-centered.png" );
 				var cursorMat = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, map: map, transparent: true } );
 				cursor = new THREE.Mesh( cursorGeo, cursorMat );
@@ -149,9 +149,8 @@
 				cursor.add( arrowHelper );
 
 
-
-				projector = new THREE.Projector();
 				raycaster = new THREE.Raycaster();
+
 
 				// setupGui();
 
@@ -238,8 +237,7 @@
 
 				// find intersections
 
-				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-				projector.unprojectVector( vector, camera );
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 ).unproject( camera );
 
 				// raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
 

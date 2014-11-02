@@ -155,7 +155,7 @@ camera<span class="token punctuation">.</span>position<span class="token punctua
 
     <section class="slide">
       <h2>Object3D</h2>
-<pre><code>var group = new THREE.Object3D();
+<pre><code>var group = new THREE.Group();
 scene.add( group );
 
 group.add( mesh1 );
@@ -422,12 +422,9 @@ loader.load("teapot.js", function( geometry, materials ) {
 </span>mouse<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientX <span class="token operator">/</span> window<span class="token punctuation">.</span>innerWidth <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
 mouse<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token operator">-</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientY <span class="token operator">/</span> window<span class="token punctuation">.</span>innerHeight <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span></span>
 
-projector <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Projector</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 raycaster <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Raycaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="interaction2"><span class="token keyword">var</span> vector <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Vector3</span><span class="token punctuation">(</span> mouse<span class="token punctuation">.</span>x<span class="token punctuation">,</span> mouse<span class="token punctuation">.</span>y<span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-projector<span class="token punctuation">.</span><span class="token function">unprojectVector<span class="token punctuation">(</span></span> vector<span class="token punctuation">,</span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="interaction2"><span class="token keyword">var</span> vector <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Vector3</span><span class="token punctuation">(</span> mouse<span class="token punctuation">.</span>x<span class="token punctuation">,</span> mouse<span class="token punctuation">.</span>y<span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">unproject<span class="token punctuation">(</span></span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 
 <span class="interaction3">raycaster<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span> camera<span class="token punctuation">.</span>position<span class="token punctuation">,</span> vector<span class="token punctuation">.</span><span class="token function">sub<span class="token punctuation">(</span></span> camera<span class="token punctuation">.</span>position <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">normalize<span class="token punctuation">(</span></span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 
