@@ -187,19 +187,20 @@ code {
 .on-slide-interaction4 .interaction4 {
   font-weight: 700;
 }
-#info {
+#info-left {
   position: absolute;
   top: 50%;
   left: 50%;
   margin-top: 370px;
   margin-left: -640px;
 }
-#github {
+#info-right {
   position: absolute;
   top: 50%;
   right: 50%;
   margin-top: 370px;
   margin-right: -640px;
+  text-align: right;
 }
 /* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+python */
 /**
