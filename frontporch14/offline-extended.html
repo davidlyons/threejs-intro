@@ -5,14 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=1280, user-scalable=no">
 
-  <title>Intro to WebGL with Three.js</title>
+  <title>Intro to WebGL with Three.js - Extended</title>
 
-  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" type="text/css">
-  <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+  <!-- <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css"> -->
 
+  <link rel="stylesheet" href="resources/fonts.css">
+  
   <!-- Required stylesheet -->
   <link rel="stylesheet" href="../deck.js/core/deck.core.css">
-
+  
   <!-- Extension CSS files go here. Remove or add as needed. -->
   <link rel="stylesheet" media="screen" href="../deck.js/extensions/menu/deck.menu.css">
   <link rel="stylesheet" media="screen" href="../deck.js/extensions/goto/deck.goto.css">
@@ -75,19 +77,21 @@
     </section>
 
     <section class="slide">
-      <iframe src="http://threejs.org/examples/webgl_particles_random" frameborder="0"></iframe>
+      <!-- <iframe src="http://threejs.org/examples/webgl_particles_random" frameborder="0"></iframe> -->
+      <iframe src="iframes/webgl_particles_random.html" frameborder="0"></iframe>
     </section>
 
     <section class="slide">
       <h2>three.js</h2>
+      <p><a href="http://threejs.org/" target="_blank">threejs.org</a></p>
       <p class="slide">3D Javascript Library</p>
       <p class="slide">Renderers: WebGL, &lt;canvas&gt;, &lt;svg&gt;, CSS3D / DOM, and more</p>
       <p class="slide">Scenes, Cameras, Geometry, 3D Model Loaders, Lights, Materials,<br>Shaders, Particles, Animation, Math Utilities</p>
     </section>
 
     <section class="slide">
-      <!-- <img class="spotlight" src="images/threejs.png" alt=""> -->
-      <iframe src="http://threejs.org" frameborder="0"></iframe>
+      <img class="spotlight" src="images/threejs.png" alt="">
+      <!-- <iframe src="http://threejs.org" frameborder="0"></iframe> -->
     </section>
 
     <section class="slide">
@@ -216,11 +220,14 @@ mesh.position.y = Math.sin( time );</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>camera.fov = 60</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>camera.far = 1000</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>camera.far = 3000</code></pre></div>
+      <div class="slide temp abs-bc"><pre style="font-size: 25px;"><code style="font-size: 25px;">camera = new THREE.OrthographicCamera( left, right, top, bottom, near, far );</code></pre></div>
+      <div class="slide temp abs-bc" id="camera-iframe-resize"><pre style="font-size: 25px;"><code style="font-size: 25px;">camera = new THREE.OrthographicCamera( left, right, top, bottom, near, far );</code></pre></div>
       <div class="slide temp abs-bc"><pre style="font-size: 26px;"><code style="font-size: 26px;">camera = new THREE.OrthographicCamera( left, right, top, bottom, near, far );</code></pre></div>
     </section>
 
     <section class="slide">
-      <iframe src="http://threejs.org/examples/misc_controls_orbit" frameborder="0"></iframe>
+      <!-- <iframe src="http://threejs.org/examples/misc_controls_orbit" frameborder="0"></iframe> -->
+      <iframe src="iframes/misc_controls_orbit.html" frameborder="0"></iframe>
     </section>
 
     <section class="slide">
@@ -244,7 +251,7 @@ controls.minDistance
 controls.maxDistance
 
 controls.minPolarAngle
-controls.maxPolarAngle</code></pre></div>
+controls.maxAzimuthAngle</code></pre></div>
     </section>
 
     <section class="slide">
@@ -254,9 +261,17 @@ controls.maxPolarAngle</code></pre></div>
     <section class="slide">
       <img class="spotlight" src="images/geometry.png" alt="">
       <div class="page-cover">
-        <h1 class="cover-title">Geometry</small></h1>
+        <h1 class="cover-title">Geometry</h1>
       </div>
     </section>
+
+    <!-- <section class="slide">
+      <h2>Geometry</h2>
+      <iframe src="iframes/vertices.html" frameborder="0"></iframe>
+      <div class="temp abs-bc bc-text">Vertices</div>
+      <div class="slide temp abs-bc bc-text">Edges</div>
+      <div class="slide temp abs-bc bc-text">Faces</div>
+    </section> -->
 
     <section class="slide">
       <h2>Geometry</h2>
@@ -270,7 +285,7 @@ controls.maxPolarAngle</code></pre></div>
     <section class="slide">
       <img class="spotlight" src="images/marble.jpg" alt="">
       <div class="page-cover">
-        <h1 class="cover-title cover-inverted">Materials</small></h1>
+        <h1 class="cover-title cover-inverted">Materials</h1>
       </div>
     </section>
 
@@ -329,9 +344,25 @@ controls.maxPolarAngle</code></pre></div>
     </section>
 
     <section class="slide">
+      <h2>Color Methods</h2>
+      <p><code>THREE.Color()</code><br>
+        set or get: Hex, RGB, HSL, CSS Style</p>
+<!-- var color = new THREE.Color(0xff0000); -->
+<pre style="font-size: 31px;"><code style="font-size: 31px;">var material = new THREE.MeshPhongMaterial({ color: 0x0000ff });
+
+material.color.setHex(0xff0000)
+material.color.setRGB(1,0,0)
+material.color.setStyle("rgb(255,0,0)")
+
+material.color.r, material.color.g, material.color.b
+material.color.getHexString()
+material.color.getHSL()</code></pre>
+    </section>
+
+    <section class="slide">
       <img class="spotlight" src="images/sunny-sky.jpg" alt="">
       <div class="page-cover">
-        <h1 class="cover-title cover-inverted">Lights</small></h1>
+        <h1 class="cover-title cover-inverted">Lights</h1>
       </div>
     </section>
 
@@ -368,6 +399,18 @@ controls.maxPolarAngle</code></pre></div>
       <h2 style="position: relative;">Three Point Lighting</h2>
       <div class="temp abs-bc bc-text outline">Key, Fill, Rim</div>
       <div class="slide temp abs-bc bc-text outline">Key, Fill, Rim</div>
+      <div class="slide temp abs-bc bc-text outline">RGB</div>
+    </section>
+
+    <section class="slide">
+      <h2>Sublime Auto Complete</h2>
+      <p><a href="https://github.com/mrdoob/three.js/tree/master/utils/editors" target="_blank">/three.js/utils/editors/sublimetext2/threejs.sublime-completions</a><br>
+      Copy to folder: Sublime Text 2/Packages/User</p>
+      <video src="videos/sublime-completions.mp4"></video>
+    </section>
+
+    <section class="slide">
+      <img src="images/3d-software.png" alt="" class="spotlight">
     </section>
 
     <section class="slide">
@@ -390,17 +433,146 @@ loader.load("teapot.js", function( geometry, materials ) {
 });</code></pre></div>
     </section>
 
+    <!-- Scene Loader
+    https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4
+    https://github.com/mrdoob/three.js/tree/master/utils/exporters/blender
+
+    http://threejs.org/examples/webgl_loader_scene.html
+      http://threejs.org/examples/js/loaders/SceneLoader.js (JSON Scene Loader)
+      http://threejs.org/examples/scenes/test_scene.js (JSON Scene)
+      http://threejs.org/docs/#Reference/Loaders/LoadingManager -->
+
+    <section class="slide">
+      <h2>Helpers</h2>
+      <iframe src="iframes/helpers.html" frameborder="0"></iframe>
+<div class="slide temp abs-bc"><pre><code>var wireframe = new THREE.WireframeHelper( mesh, hex );
+scene.add( wireframe );</code></pre></div>
+<div class="slide temp abs-bc"><pre><code>var grid = new THREE.GridHelper( size, step );
+scene.add( grid );</code></pre></div>
+<div class="slide temp abs-bc"><pre style="font-size: 30px;"><code style="font-size: 30px;">var lightHelper = new THREE.DirectionalLightHelper( light, size );
+scene.add( lightHelper );</code></pre></div>
+<div class="slide temp abs-bc"><pre><code>var axis = new THREE.AxisHelper( size );
+object.add( axis );</code></pre></div>
+<div class="slide temp abs-bc"><pre><code>var box = new THREE.BoxHelper( object );</code></pre></div>
+<div class="slide temp abs-bc"><pre><code>var bbox = new THREE.BoundingBoxHelper( object, hex );</code></pre></div>
+<!-- <div class="slide temp abs-bc"><pre style="font-size: 33px;"><code style="font-size: 33px;">var vnh = new THREE.VertexNormalsHelper( object, size, hex );
+scene.add( vnh );</code></pre></div> -->
+<!-- <div class="slide temp abs-bc"><pre><code>Arrow Helper?</code></pre></div> -->
+    </section>
+
+    <!-- <section class="slide">
+      <iframe src="http://threejs.org/examples/webgl_buffergeometry_lines_indexed" frameborder="0"></iframe>
+    </section> -->
+
+    <section class="slide">
+      <!-- <iframe src="http://threejs.org/examples/webgl_lines_colors" frameborder="0"></iframe> -->
+      <iframe src="iframes/webgl_lines_colors.html" frameborder="0"></iframe>
+    </section>
+
+    <section class="slide">
+      <h2>Lines</h2>
+<pre><code>var mat = new THREE.LineBasicMaterial({ color: 0x0000ff });
+
+var geometry = new THREE.Geometry();
+
+geometry.vertices.push(
+  new THREE.Vector3( -10, 0, 0 ),
+  new THREE.Vector3( 0, 10, 0 ),
+  new THREE.Vector3( 10, 0, 0 )
+);
+
+var line = new THREE.Line( geometry, material );
+scene.add( line );</code></pre>
+    </section>
+
+    <section class="slide">
+      <!-- <iframe src="http://www.davidscottlyons.com/threejs/meyerson-seat-map/index.html" frameborder="0"></iframe> -->
+      <iframe src="../../meyerson-seat-map/index.html" frameborder="0"></iframe>
+      <div class="slide"></div>
+    </section>
+
+    <section class="slide">
+      <h2>Sprites</h2>
+      <p>A plane that always faces towards the camera (aka Billboarding)</p>
+<pre><code>var map = THREE.ImageUtils.loadTexture( "sprite.png" );
+
+var material = new THREE.SpriteMaterial({ map: map,
+color: 0xffffff, fog: true });
+
+var sprite = new THREE.Sprite( material );
+scene.add( sprite );</code></pre>
+    </section>
+
+    <section class="slide">
+      <!-- <iframe src="http://threejs.org/examples/webgl_particles_random" frameborder="0"></iframe> -->
+      <iframe src="iframes/webgl_particles_random.html" frameborder="0"></iframe>
+    </section>
+
+    <section class="slide">
+      <h2>Point Clouds</h2>
+<pre style="font-size: 33px;"><code style="font-size: 33px;">var material = new THREE.PointCloudMaterial( parameters );
+var geometry = new THREE.Geometry();
+
+for ( i = 0; i < 20000; i ++ ) {
+  var vertex = new THREE.Vector3();
+  vertex.x = Math.random() * 2000 - 1000;
+  vertex.y = Math.random() * 2000 - 1000;
+  vertex.z = Math.random() * 2000 - 1000;
+  geometry.vertices.push( vertex );
+}
+
+var particles = new THREE.PointCloud( geometry, material );
+scene.add( particles );</code></pre>
+    </section>
+
+    <!-- <section class="slide">
+      <h2>How to update things</h2>
+      <p><a href="https://github.com/mrdoob/three.js/wiki/Updates" target="_blank">github.com/mrdoob/three.js/wiki/Updates</a></p>
+      <p>Geometry, Material Properties, Textures, Camera Settings</p>
+      
+<pre><code>mesh.geometry.vertices[40].x = 20;
+mesh.geometry.verticesNeedUpdate = true;
+
+camera.fov = 50;
+camera.updateProjectionMatrix();</code></pre>
+    </section> -->
+
+    <!-- http://sole.github.io/tween.js/examples/03_graphs.html -->
+    <section class="slide instant">
+      <img class="spotlight" src="images/tween-graphs.png" alt="">
+      <div class="abs-tc"><a href="https://github.com/sole/tween.js" target="_blank">github.com/sole/tween.js</a>/examples/03_graphs.html</div>
+      <iframe src="iframes/tween.html" frameborder="0"></iframe>
+    </section>
+
+    <!-- http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/ -->
+    <!-- https://github.com/sole/tween.js/blob/master/docs/user_guide.md -->
+    <section class="slide">
+      <h2>Tween.js</h2>
+      <p><a href="https://github.com/sole/tween.js" target="_blank">github.com/sole/tween.js</a></p>
+<div class="abs-bc"><pre><code>var position = { y: 200 };
+var target = { y: -120 };
+
+var tween = new TWEEN.Tween(position).to(target, 1000)
+  .easing(TWEEN.Easing.Bounce.Out)
+  .onUpdate(function(){ mesh.position.y = position.y; })
+  .start();
+
+TWEEN.update(); // in render loop</code></pre></div>
+    </section>
+
+    <!-- http://aerotwist.com/tutorials/create-your-own-environment-maps/ -->
     <section class="slide">
       <!-- <iframe src="http://threejs.org/examples/webgl_materials_cubemap" frameborder="0"></iframe> -->
       <iframe src="iframes/cubemap.html" frameborder="0"></iframe>
       <div class="slide"></div>
       <div class="slide"></div>
+      <div class="slide temp abs-bc bc-text outline"><a href="http://aerotwist.com/tutorials/create-your-own-environment-maps/" style="font-weight: bold; text-decoration: none;" target="_blank">aerotwist.com/tutorials/create-your-own-environment-maps</a></div>
     </section>
 
     <section class="slide">
       <img class="spotlight" src="images/interaction.png" alt="">
       <div class="page-cover">
-        <h1 class="cover-title">Interaction</small></h1>
+        <h1 class="cover-title">Interaction</h1>
       </div>
     </section>
 
@@ -408,7 +580,8 @@ loader.load("teapot.js", function( geometry, materials ) {
       <!-- http://stemkoski.github.io/Three.js/Mouse-Over.html -->
       <!-- http://threejs.org/examples/webgl_interactive_cubes -->
       <!-- http://soledadpenades.com/articles/three-js-tutorials/object-picking/ -->
-      <iframe src="http://threejs.org/examples/webgl_interactive_cubes" frameborder="0"></iframe>
+      <!-- <iframe src="http://threejs.org/examples/webgl_interactive_cubes" frameborder="0"></iframe> -->
+      <iframe src="iframes/webgl_interactive_cubes.html" frameborder="0"></iframe>
     </section>
 
     <section class="slide instant">
@@ -439,8 +612,61 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
 
     <section class="slide">
       <iframe src="../../pyramid/index.html" frameborder="0"></iframe>
-      <div class="page-cover slide temp">
-        <h1 class="cover-title">
+    </section>
+
+    <!-- <section class="slide">
+      <h2>Performance</h2>
+      <p>Poly count [<a href="http://mkeverydays.tumblr.com">mkeverydays.tumblr.com</a>]</p>
+      <p>Texture resolution</p>
+      <p>Draw only if and when scene has changed</p>
+      <p>Buffer Geometry</p>
+      <p>GLSL Shaders</p>
+    </section> -->
+
+    <section class="slide">
+      <img class="spotlight" src="images/tron-legacy.jpg" alt="">
+      <div class="page-cover">
+        <h1 class="cover-title cover-inverted">Virtual Reality</h1>
+      </div>
+    </section>
+
+    <!-- <section class="slide">
+      <video class="spotlight" src="videos/cardboard.mp4"></video>
+    </section> -->
+
+    <section class="slide">
+      <h2>WebVR</h2>
+      <p>
+        Oculus Rift DK1 support only:<br>
+        <a href="https://github.com/Instrument/oculus-bridge" target="_blank">github.com/Instrument/oculus-bridge</a>/web/build/OculusBridge.min.js<br>
+        <a href="../../slingshot-panorama/rift.html" target="_blank">Cubemap</a>, <a href="http://www.shapespark.com/" target="_blank">shapespark.com</a>
+      </p>
+
+      <p>
+        <a href="http://vr.chromeexperiments.com/" target="_blank">vr.chromeexperiments.com</a><br>
+        <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/controls/DeviceOrientationControls.js" target="_blank">Device Orientation Controls</a>, <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/effects/StereoEffect.js" target="_blank">Stereo Effect</a><br>
+        <a href="../../slingshot-panorama/vr.html" target="_blank">Cubemap</a>
+      </p>
+
+      <p>
+        <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/controls/VRControls.js" target="_blank">VR Controls</a>, <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/effects/VREffect.js" target="_blank">VR Effect</a><br>
+        <a href="http://webvr.info/" target="_blank">webvr.info</a>, <a href="http://mozvr.com/" target="_blank">mozvr.com</a><br>
+        Experimental builds of <a href="http://mozvr.com/downloads/">Firefox</a> and <a href="https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ&usp=sharing#list" target="_blank">Chrome</a><br>
+        <a href="https://github.com/borismus/webvr-boilerplate" target="_blank">Responsive WebVR Boilerplate</a>
+      </p>
+      
+      <!-- Cardboard 2014 -->
+      <!-- https://www.youtube.com/watch?v=DFog2gMnm44 -->
+
+      <!-- Cardboard 2015 -->
+      <!-- https://www.youtube.com/watch?v=R0nSAYk_IVA -->
+      <!-- https://www.youtube.com/watch?v=QpW4LuNQ1ZQ -->
+    </section>
+
+    <section class="slide">
+      <iframe src="../../pyramid/index.html" frameborder="0"></iframe>
+      <div class="page-cover">
+        <h1 class="cover-title cover-inverted">
           <br>
           <small><a href="http://www.davidscottlyons.com/threejs" style="color: #fff; text-shadow: 0 5px 3px rgba(0,0,0,0.7);">davidscottlyons.com/threejs</a></small>
         </h1>
@@ -452,9 +678,6 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
         <h1 class="cover-title">
           Thanks
           <small><a href="http://www.davidscottlyons.com/threejs">davidscottlyons.com/threejs</a></small>
-          <!-- <br>
-          <small><img src="images/twitter.png" style="vertical-align: middle;" alt=""><a href="http://www.twitter.com/davidscottlyons">davidscottlyons</a></small>
-          <small><img src="images/octocat.png" style="vertical-align: middle;" alt=""><a href="http://www.github.com/davidlyons">davidlyons</a></small> -->
         </h1>
       </div>
     </section>
@@ -486,15 +709,6 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
 
     <!-- End extension snippets. -->
   </div>
-
-<div id="info-left">
-  <a href="http://www.davidscottlyons.com/threejs">davidscottlyons.com/threejs</a>
-</div>
-
-<div id="info-right">
-  <a href="http://youtu.be/6eLl8yQnxHQ" target="_blank">Watch Presentation Video</a><br>
-  <a href="https://github.com/davidlyons/frontporch" target="_blank">Slides on GitHub</a>
-</div>
 
 <!-- Required JS files. -->
 <script src="resources/jquery-2.1.1.min.js"></script>
