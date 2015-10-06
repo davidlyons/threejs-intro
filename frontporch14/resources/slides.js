@@ -112,7 +112,15 @@ $(function() {
     $('iframe').not($iframes[to]).each(function () {
       disable(this);
     });
-  });
-});
 
-if (location.hash == "") location.hash = "slide-0";
+    // Google Analytics
+    if('ga' in window) {
+      var path = location.pathname.replace('index.html','') + '-slide-' + (to+1);
+      ga('send', 'pageview', path);
+    }
+
+  });
+
+  if (location.hash == "") location.hash = "slide-0";
+  
+});
