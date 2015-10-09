@@ -11,10 +11,10 @@
   <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css"> -->
 
   <link rel="stylesheet" href="resources/fonts.css">
-  
+
   <!-- Required stylesheet -->
   <link rel="stylesheet" href="../deck.js/core/deck.core.css">
-  
+
   <!-- Extension CSS files go here. Remove or add as needed. -->
   <link rel="stylesheet" media="screen" href="../deck.js/extensions/menu/deck.menu.css">
   <link rel="stylesheet" media="screen" href="../deck.js/extensions/goto/deck.goto.css">
@@ -512,13 +512,13 @@ scene.add( sprite );</code></pre>
     </section>
 
     <section class="slide">
-      <!-- <iframe src="http://threejs.org/examples/webgl_particles_random" frameborder="0"></iframe> -->
-      <iframe src="iframes/webgl_particles_random.html" frameborder="0"></iframe>
+      <!-- <iframe src="http://threejs.org/examples/webgl_points_random" frameborder="0"></iframe> -->
+      <iframe src="iframes/webgl_points_random.html" frameborder="0"></iframe>
     </section>
 
     <section class="slide">
-      <h2>Point Clouds</h2>
-<pre style="font-size: 33px;"><code style="font-size: 33px;">var material = new THREE.PointCloudMaterial( parameters );
+      <h2>Points</h2>
+<pre style="font-size: 33px;"><code style="font-size: 33px;">var material = new THREE.PointsMaterial( parameters );
 var geometry = new THREE.Geometry();
 
 for ( i = 0; i < 20000; i ++ ) {
@@ -529,7 +529,7 @@ for ( i = 0; i < 20000; i ++ ) {
   geometry.vertices.push( vertex );
 }
 
-var particles = new THREE.PointCloud( geometry, material );
+var particles = new THREE.Points( geometry, material );
 scene.add( particles );</code></pre>
     </section>
 
@@ -537,7 +537,7 @@ scene.add( particles );</code></pre>
       <h2>How to update things</h2>
       <p><a href="https://github.com/mrdoob/three.js/wiki/Updates" target="_blank">github.com/mrdoob/three.js/wiki/Updates</a></p>
       <p>Geometry, Material Properties, Textures, Camera Settings</p>
-      
+
 <pre><code>mesh.geometry.vertices[40].x = 20;
 mesh.geometry.verticesNeedUpdate = true;
 
@@ -662,7 +662,7 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
         Experimental builds of <a href="http://mozvr.com/downloads/">Firefox</a> and <a href="https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ&usp=sharing#list" target="_blank">Chrome</a><br>
         <a href="https://github.com/borismus/webvr-boilerplate" target="_blank">Responsive WebVR Boilerplate</a>
       </p>
-      
+
       <!-- Cardboard 2014 -->
       <!-- https://www.youtube.com/watch?v=DFog2gMnm44 -->
 
