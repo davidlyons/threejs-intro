@@ -41,6 +41,9 @@ a:focus {
 .deck-menu > .deck-child-current {
   outline: 10px solid teal;
 }
+.deck-menu iframe {
+  pointer-events: none;
+}
 .deck-container,
 .deck-container > .slide {
   width: 1280px;
