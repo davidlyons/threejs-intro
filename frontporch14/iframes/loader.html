@@ -114,7 +114,7 @@
         // var material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
 
         // var material = new THREE.MeshBasicMaterial({ color: 0x333333, wireframe: true });
-        var material = new THREE.MeshPhongMaterial({ color: 0xcccccc, ambient: 0x444444, side: THREE.DoubleSide });
+        var material = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide });
 
         var loader = new THREE.JSONLoader();
         loader.load( "models/teapot.js", function( geometry, materials ) {
@@ -144,7 +144,7 @@
 
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.noKeys = true;
+        controls.enableKeys = false;
 
         stats = new Stats();
         stats.domElement.style.position = 'absolute';

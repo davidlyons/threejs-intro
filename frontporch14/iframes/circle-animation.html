@@ -42,7 +42,7 @@
     var loader = new THREE.JSONLoader();
     var pumpkin;
     loader.load( "models/pumpkin.js", function( geometry, materials ) {
-      pumpkin = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+      pumpkin = new THREE.Mesh( geometry, new THREE.MultiMaterial( materials ) );
       pumpkin.scale.set(.3,.3,.3);
       pumpkin.visible = false;
       group.add( pumpkin );

@@ -116,7 +116,7 @@
 
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.noKeys = true;
+        controls.enableKeys = false;
 
         stats = new Stats();
         stats.domElement.style.position = 'absolute';
@@ -206,11 +206,11 @@
         
         if   (step == 1) {
           mesh.material.shading = THREE.SmoothShading; // default
-          mesh.geometry.normalsNeedUpdate = true;
+          mesh.material.needsUpdate = true;
         }
         else if (step == 2) {
           mesh.material.shading = THREE.FlatShading;
-          mesh.geometry.normalsNeedUpdate = true;
+          mesh.material.needsUpdate = true;
           fnh.visible = false;
         }
         else if (step == 3) {
@@ -218,7 +218,7 @@
           wfh.visible = false;
 
           mesh.material.shading = THREE.FlatShading; // default
-          mesh.geometry.normalsNeedUpdate = true;
+          mesh.material.needsUpdate = true;
         }
         else if (step == 4) {
           fnh.visible = true;
@@ -226,7 +226,7 @@
           wfh.visible = true;
 
           mesh.material.shading = THREE.FlatShading; // default
-          mesh.geometry.normalsNeedUpdate = true;
+          mesh.material.needsUpdate = true;
         }
         else if (step == 5) {
           fnh.visible = false;
@@ -234,7 +234,7 @@
           wfh.visible = true;
 
           mesh.material.shading = THREE.SmoothShading; // default
-          mesh.geometry.normalsNeedUpdate = true;
+          mesh.material.needsUpdate = true;
         }
         else if (step == 6) {
           wfh.visible = false;

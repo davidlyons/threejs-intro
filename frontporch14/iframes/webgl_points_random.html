@@ -92,9 +92,9 @@
 					color = parameters[i][0];
 					size  = parameters[i][1];
 
-					materials[i] = new THREE.PointCloudMaterial( { size: size } );
+					materials[i] = new THREE.PointsMaterial( { size: size } );
 
-					particles = new THREE.PointCloud( geometry, materials[i] );
+					particles = new THREE.Points( geometry, materials[i] );
 
 					particles.rotation.x = Math.random() * 6;
 					particles.rotation.y = Math.random() * 6;
@@ -105,6 +105,7 @@
 				}
 
 				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
@@ -192,7 +193,7 @@
 
 					var object = scene.children[ i ];
 
-					if ( object instanceof THREE.PointCloud ) {
+					if ( object instanceof THREE.Points ) {
 
 						object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
 

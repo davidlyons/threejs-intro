@@ -88,7 +88,7 @@
         camera.position.set(0, 0, 250);
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.noKeys = true;
+        controls.enableKeys = false;
 
         scene = new THREE.Scene();
 
@@ -160,26 +160,24 @@
 
 
 
-        
-        colorMap = THREE.ImageUtils.loadTexture( "images/planets/earth_atmos_2048.jpg" );
-        specMap = THREE.ImageUtils.loadTexture( "images/planets/earth_specular_2048.jpg" );
-        normalMap = THREE.ImageUtils.loadTexture( "images/planets/earth_normal_2048.jpg" );
-        alphaMap = THREE.ImageUtils.loadTexture( "images/planets/earth_alpha_2048.jpg" );
+        var loader = new THREE.TextureLoader();
+
+        colorMap = loader.load( "images/planets/earth_atmos_2048.jpg" );
+        specMap = loader.load( "images/planets/earth_specular_2048.jpg" );
+        normalMap = loader.load( "images/planets/earth_normal_2048.jpg" );
+        alphaMap = loader.load( "images/planets/earth_alpha_2048.jpg" );
         
 
         // var material  = new THREE.MeshPhongMaterial( { ambient: 0xffffff, color: 0xffffff , specular: 0x333333, shininess: 15, map: colorMap } );
 
         var material = new THREE.MeshPhongMaterial({
-          ambient: 0xaaaaaa,
-          color: 0xaaaaaa,
+          color: 0xeeeeee,
           specular: 0x333333,
           shininess: 15,
           map: colorMap,
           specularMap: whiteMap,
           normalMap: flatNormalMap,
           alphaMap: whiteMap
-          // shading: THREE.SmoothShading
-          // transparent: true
         });
 
         // var material  = new THREE.MeshBasicMaterial( { color: 0xffffff, map: colorMap } );
@@ -323,35 +321,40 @@
           mesh.material.specularMap = whiteMap;
           mesh.material.needsUpdate = true;
 
+          mesh.material.color.setHex(0xeeeeee);
+
           document.querySelector("#texture").className = 'color-map';
         }
         else if (step == 3) {
           // NORMAL MAP
           mesh.material.map = whiteMap;
-          mesh.material.ambient.setHex(0x444444);
           mesh.material.normalMap = normalMap;
           mesh.material.specularMap = whiteMap;
           mesh.material.needsUpdate = true;
+
+          mesh.material.color.setHex(0x777777);
 
           document.querySelector("#texture").className = 'normal-map';
         }
         else if (step == 4) {
           // SPECULAR MAP
           mesh.material.map = whiteMap;
-          mesh.material.ambient.setHex(0x444444);
           mesh.material.normalMap = flatNormalMap;
           mesh.material.specularMap = specMap;
           mesh.material.needsUpdate = true;
+
+          mesh.material.color.setHex(0x777777);
 
           document.querySelector("#texture").className = 'specular-map';
         }
         else if (step == 5) {
           // ALL MAPS
           mesh.material.map = colorMap;
-          mesh.material.ambient.setHex(0xaaaaaa);
           mesh.material.normalMap = normalMap;
           mesh.material.specularMap = specMap;
           mesh.material.needsUpdate = true;
+
+          mesh.material.color.setHex(0xeeeeee);
 
           document.querySelector("#texture").className = 'all-maps';
           // document.querySelector("#texture").style.display = 'none';

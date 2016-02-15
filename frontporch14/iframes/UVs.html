@@ -49,7 +49,7 @@
     <!-- <script src="three/libs/dat.gui.min.js"></script> -->
     <script src="three/libs/tween.min.js"></script>
 
-    <script src="three/UVsUtils.js"></script>
+    <script src="three/UVsDebug.js"></script>
 
     <script>
 
@@ -116,7 +116,7 @@
         camera.position.set(0, 75, 250);
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.noKeys = true;
+        controls.enableKeys = false;
 
         scene = new THREE.Scene();
 
@@ -151,10 +151,12 @@
         whiteMap = new THREE.Texture( x );
         whiteMap.needsUpdate = true;
 
-        specMap = THREE.ImageUtils.loadTexture( "images/planets/earth_specular_2048.jpg" );
+        var loader = new THREE.TextureLoader();
 
-        // var texture = THREE.ImageUtils.loadTexture( "images/crate.gif" );
-        colorMap = THREE.ImageUtils.loadTexture( "images/planets/earth_atmos_2048.jpg" );
+        specMap = loader.load( "images/planets/earth_specular_2048.jpg" );
+
+        // var texture = loader.load( "images/crate.gif" );
+        colorMap = loader.load( "images/planets/earth_atmos_2048.jpg" );
         // var material  = new THREE.MeshPhongMaterial( { ambient: 0x777777, color: 0xdddddd, specular: 0xffffff, shininess: 8, shading: THREE.SmoothShading, map: colorMap } );
         var material  = new THREE.MeshBasicMaterial( { color: 0xffffff, map: whiteMap } );
 

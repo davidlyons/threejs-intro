@@ -219,7 +219,8 @@ mesh.position.y = Math.sin( time );</code></pre></div>
     </section>
 
     <section class="slide">
-      <iframe src="http://threejs.org/examples/misc_controls_orbit" frameborder="0"></iframe>
+      <!-- <iframe src="http://threejs.org/examples/misc_controls_orbit" frameborder="0"></iframe> -->
+      <iframe src="iframes/misc_controls_orbit.html" frameborder="0"></iframe>
     </section>
 
     <section class="slide">
@@ -311,7 +312,8 @@ controls.maxPolarAngle</code></pre></div>
     <section class="slide">
       <h2>Texture Mapping</h2>
       <iframe src="iframes/texture-mapping.html" frameborder="0"></iframe>
-      <div class="temp abs-bc"><pre><code>texture = THREE.ImageUtils.loadTexture("color-map.jpg");</code></pre></div>
+      <div class="temp abs-bc"><pre><code>var loader = new THREE.TextureLoader();
+var texture = loader.load("color-map.jpg");</code></pre></div>
       <div class="temp slide abs-bc"><pre><code>map: texture</code></pre></div>
       <div class="temp slide abs-bc"><pre><code>normalMap: texture</code></pre></div>
       <div class="temp slide abs-bc"><pre><code>specularMap: texture</code></pre></div>
@@ -353,9 +355,9 @@ controls.maxPolarAngle</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.SpotLight( 0xb4e7f2, 0.8 );</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light.angle = Math.PI / 9;</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light.angle = Math.PI / 5;</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>light.exponent = 10;</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>light.exponent = 1;</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>light.exponent = 20;</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>light.penumbra = 0.1;</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>light.penumbra = 0;</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>light.penumbra = 0.2;</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.AmbientLight( 0x444444 );</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.AmbientLight( 0x000000 );</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.AmbientLight( 0x444444 );</code></pre></div>
@@ -382,7 +384,7 @@ controls.maxPolarAngle</code></pre></div>
 <div class="slide temp abs-bc"><pre><code>var loader = new THREE.JSONLoader();
 
 loader.load("teapot.js", function( geometry, materials ) {
-  material = new THREE.MeshFaceMaterial( materials );
+  material = new THREE.MultiMaterial( materials );
   mesh = new THREE.Mesh( geometry, material );
   scene.add( mesh );
 });</code></pre></div>

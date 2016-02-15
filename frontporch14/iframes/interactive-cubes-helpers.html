@@ -58,7 +58,7 @@
 				camera.position.set( -700, 50, 50 );
 
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				controls.noKeys = true;
+				controls.enableKeys = false;
 
 				scene = new THREE.Scene();
 
@@ -127,7 +127,8 @@
 
 				// cursor helper
 				var cursorGeo = new THREE.PlaneBufferGeometry( 70, 70, 1, 1 );
-				var map = THREE.ImageUtils.loadTexture( "images/cursor-centered.png" );
+				var loader = new THREE.TextureLoader();
+				var map = loader.load( "images/cursor-centered.png" );
 				var cursorMat = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, map: map, transparent: true } );
 				cursor = new THREE.Mesh( cursorGeo, cursorMat );
 

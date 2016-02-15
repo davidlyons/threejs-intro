@@ -136,22 +136,13 @@
 				// grid.position.y = -200;
 				scene.add( grid );
 
-				// white
-				// mesh = new THREE.Mesh( new THREE.SphereGeometry( 100, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } ) );
-				// TODO: Set to zero and offset camera
-				// mesh.position.set( 650, -270, -270 );
-				// mesh.position.multiplyScalar(1.5);
-				// scene.add( mesh );
-
-				// red
-				mesh = new THREE.Mesh( new THREE.SphereGeometry( 50, 20, 12), new THREE.MeshNormalMaterial() );
+				mesh = new THREE.Mesh(
+					// new THREE.SphereGeometry( 50, 20, 12),
+					new THREE.BoxGeometry( 50, 50, 50 ),
+					new THREE.MeshNormalMaterial()
+				);
 				mesh.position.y = 60;
 				scene.add( mesh );
-
-				// blue
-				var mesh3 = new THREE.Mesh( new THREE.SphereGeometry( 5, 16, 8 ), new THREE.MeshBasicMaterial( { color: 0x0000ff, wireframe: true } ) );
-				mesh3.position.z = 150;
-				// cameraRig.add( mesh3 );
 
 				//
 
@@ -183,7 +174,7 @@
 				renderer.autoClear = false;
 
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
-				controls.noKeys = true;
+				controls.enableKeys = false;
 
 				//
 

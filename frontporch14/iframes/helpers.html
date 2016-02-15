@@ -28,12 +28,13 @@
 
     <div id="container"></div>
     
-    <script src="three/three.min.js"></script>
+    <script src="three/three.js"></script>
     <script src="three/controls/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
     <script src="three/libs/stats.min.js"></script>
     <script src="three/libs/dat.gui.min.js"></script>
     <script src="three/libs/tween.min.js"></script>
+    <script src="three/geometries/TeapotBufferGeometry.js"></script>
 
     <script>
 
@@ -89,7 +90,7 @@
 
 
         // directional - FILL LIGHT
-        fillLight = new THREE.SpotLight( 0x034df6, .8, 0, Math.PI/8, 10 );
+        fillLight = new THREE.SpotLight( 0x034df6, .8, 0, Math.PI/8, 0.01 );
         fillLight.position.set( 80, 80, 40 ).multiplyScalar(1.6);
         scene.add( fillLight );
         
@@ -121,42 +122,41 @@
         // var material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
 
         // var material = new THREE.MeshBasicMaterial({ color: 0x333333, wireframe: true });
-        var material = new THREE.MeshPhongMaterial({ color: 0xeeeeee, ambient: 0x444444, side: THREE.DoubleSide });
+        var material = new THREE.MeshPhongMaterial({ color: 0xeeeeee, side: THREE.DoubleSide });
 
-        var loader = new THREE.JSONLoader();
-        loader.load( "models/teapot.js", function( geometry, materials ) {
-          // console.log(materials);
+        var geometry = new THREE.TeapotBufferGeometry(16);
 
-          mesh = new THREE.Mesh( geometry, material );
-          mesh.scale.set(4,4,4);
-          mesh.position.y = -30;
-          scene.add( mesh );
+        mesh = new THREE.Mesh( geometry, material );
+        mesh.scale.set(4,4,4);
+        mesh.position.y = 30;
+        scene.add( mesh );
 
-          wfh = new THREE.WireframeHelper( mesh, 0x333333 );
-          wfh.visible = false;
-          scene.add( wfh );
+        wfh = new THREE.WireframeHelper( mesh, 0x333333 );
+        wfh.visible = false;
+        scene.add( wfh );
 
-          box = new THREE.BoxHelper( mesh ); // local-axis-aligned
-          box.material.color.setHex( 0xee6a00 );
-          box.visible = false;
-          scene.add( box );
+        // both world aligned bounding boxes:
 
-          bbox = new THREE.BoundingBoxHelper( mesh, 0xc11414 ); // world-axis-aligned
-          bbox.update();
-          bbox.visible = false;
-          scene.add( bbox );
+        box = new THREE.BoxHelper( mesh ); // no face diagonals
+        box.material.color.setHex( 0xee6a00 );
+        box.visible = false;
+        scene.add( box );
 
-          axis = new THREE.AxisHelper( 40 );
-          // mesh.add( axis );
+        bbox = new THREE.BoundingBoxHelper( mesh, 0xc11414 ); // face diagonals
+        bbox.update();
+        bbox.visible = false;
+        scene.add( bbox );
 
-          // fnh = new THREE.FaceNormalsHelper( mesh, 10, 0xff0000 );
-          // fnh.visible = false;
-          // scene.add( fnh );
+        axis = new THREE.AxisHelper( 40 );
+        // mesh.add( axis );
 
-          vnh = new THREE.VertexNormalsHelper( mesh, 10, 0x0060ff );
-          vnh.visible = false;
-          scene.add( vnh );
-        });
+        // fnh = new THREE.FaceNormalsHelper( mesh, 10, 0xff0000 );
+        // fnh.visible = false;
+        // scene.add( fnh );
+
+        vnh = new THREE.VertexNormalsHelper( mesh, 10, 0x0060ff );
+        vnh.visible = false;
+        scene.add( vnh );
 
 
 
@@ -171,7 +171,7 @@
         controls = new THREE.OrbitControls( camera, renderer.domElement );
         // controls.autoRotate = true;
         // controls.autoRotateSpeed = 2;
-        controls.noKeys = true;
+        controls.enableKeys = false;
 
         stats = new Stats();
         stats.domElement.style.position = 'absolute';
@@ -234,6 +234,7 @@
 
         if (mesh) {
           mesh.rotation.y -= 0.5 * delta;
+          box.update( mesh );
           bbox.update();
           // fnh.update();
           vnh.update();
