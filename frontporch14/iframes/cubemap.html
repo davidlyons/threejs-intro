@@ -134,17 +134,20 @@
 					depthWrite: false,
 					side: THREE.BackSide
 
-				} ),
+				} );
 
-				mesh = new THREE.Mesh( new THREE.BoxGeometry( 50000, 50000, 50000 ), material );
+				var boxGeo = new THREE.BoxGeometry( 50000, 50000, 50000 );
+				mesh = new THREE.Mesh( boxGeo, material );
 				// mesh.scale.set(500,500,500);
 				group.add( mesh );
 
-				wfh = new THREE.WireframeHelper( mesh, 0xffffff );
+				var wireframe = new THREE.WireframeGeometry( boxGeo );
+				wfh = new THREE.LineSegments( wireframe );
+				wfh.material.color.setHex(0xffffff);
 				wfh.material.depthWrite = false;
 				wfh.renderOrder = 1;
 				wfh.visible = false;
-				scene.add( wfh );
+				mesh.add( wfh );
 
 				//
 

@@ -113,7 +113,7 @@
         // add objects here
 
 
-        grid = new THREE.GridHelper( 350, 50 );
+        grid = new THREE.GridHelper( 350, 14 );
         grid.position.y = -30;
         grid.visible = false;
         scene.add( grid );
@@ -131,21 +131,17 @@
         mesh.position.y = 30;
         scene.add( mesh );
 
-        wfh = new THREE.WireframeHelper( mesh, 0x333333 );
+        var wireframe = new THREE.WireframeGeometry( geometry );
+        wfh = new THREE.LineSegments( wireframe );
+        wfh.material.color.setHex(0x333333);
         wfh.visible = false;
-        scene.add( wfh );
+        mesh.add( wfh );
 
-        // both world aligned bounding boxes:
-
-        box = new THREE.BoxHelper( mesh ); // no face diagonals
+        // world aligned bounding boxes
+        box = new THREE.BoxHelper( mesh );
         box.material.color.setHex( 0xee6a00 );
         box.visible = false;
         scene.add( box );
-
-        bbox = new THREE.BoundingBoxHelper( mesh, 0xc11414 ); // face diagonals
-        bbox.update();
-        bbox.visible = false;
-        scene.add( bbox );
 
         axis = new THREE.AxisHelper( 40 );
         // mesh.add( axis );
@@ -235,7 +231,6 @@
         if (mesh) {
           mesh.rotation.y -= 0.5 * delta;
           box.update( mesh );
-          bbox.update();
           // fnh.update();
           vnh.update();
         }
@@ -268,7 +263,6 @@
           wfh.visible = false;
           grid.visible = false;
           box.visible = false;
-          bbox.visible = false;
           vnh.visible = false;
           keyLightHelper.visible = false;
           fillLightHelper.visible = false;
@@ -278,7 +272,6 @@
           wfh.visible = true;
           grid.visible = false;
           box.visible = false;
-          bbox.visible = false;
           vnh.visible = false;
           keyLightHelper.visible = false;
           fillLightHelper.visible = false;
@@ -288,7 +281,6 @@
           wfh.visible = false;
           grid.visible = true;
           box.visible = false;
-          bbox.visible = false;
           vnh.visible = false;
           keyLightHelper.visible = false;
           fillLightHelper.visible = false;
@@ -298,7 +290,6 @@
           wfh.visible = false;
           grid.visible = false;
           box.visible = false;
-          bbox.visible = false;
           mesh.remove( axis );
           vnh.visible = false;
           keyLightHelper.visible = true;
@@ -309,7 +300,6 @@
           wfh.visible = false;
           grid.visible = false;
           box.visible = false;
-          bbox.visible = false;
           mesh.add( axis );
           vnh.visible = false;
           keyLightHelper.visible = false;
@@ -320,28 +310,16 @@
           wfh.visible = false;
           grid.visible = false;
           box.visible = true;
-          bbox.visible = false;
           mesh.remove( axis );
           vnh.visible = false;
           keyLightHelper.visible = false;
           fillLightHelper.visible = false;
           rimLightHelper.visible = false;
         }
-        else if (step == 7) {
-          wfh.visible = false;
-          grid.visible = false;
-          box.visible = false;
-          bbox.visible = true;
-          vnh.visible = false;
-          keyLightHelper.visible = false;
-          fillLightHelper.visible = false;
-          rimLightHelper.visible = false;
-        }
-        // else if (step == 8) {
+        // else if (step == 7) {
         //   wfh.visible = false;
         //   grid.visible = false;
         //   box.visible = false;
-        //   bbox.visible = false;
         //   vnh.visible = true;
         //   keyLightHelper.visible = false;
         //   fillLightHelper.visible = false;
@@ -356,7 +334,7 @@
 
       function forward() {
         step++;
-        if (step > 7) { step = 7; return; }
+        if (step > 6) { step = 6; return; }
         applyStep(step);
       }
 

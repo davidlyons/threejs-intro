@@ -53,10 +53,12 @@
 				var currentMap = topMap;
 
 				function moveFrustumVerts(map){
-				  for (var i = 0; i <= 3; i++) {
-				   frustumVerts[i].copy( camHelperVerts[ pointMap[ map[i] ][0] ] );
-				  }			  
-				  frustum.geometry.verticesNeedUpdate = true;
+					for (var i = 0; i <= 3; i++) {
+						frustumVerts[i].x = camHelperVerts.getX( pointMap[ map[i] ][0] );
+						frustumVerts[i].y = camHelperVerts.getY( pointMap[ map[i] ][0] );
+						frustumVerts[i].z = camHelperVerts.getZ( pointMap[ map[i] ][0] );
+					}
+					frustum.geometry.verticesNeedUpdate = true;
 					currentMap = map;
 				}
 
@@ -98,7 +100,6 @@
 				activeCamera = cameraPerspective;
 				activeHelper = cameraPerspectiveHelper;
 
-
 				// counteract different front orientation of cameras vs rig
 
 				cameraOrtho.rotation.y = Math.PI;
@@ -122,7 +123,7 @@
 				activeHelper.add( frustum );
 				frustum.visible = false;
 
-				camHelperVerts = activeHelper.geometry.vertices;
+				camHelperVerts = activeHelper.geometry.getAttribute('position');
 				pointMap = activeHelper.pointMap;
 				frustumVerts = frustum.geometry.vertices;
 
@@ -130,9 +131,8 @@
 
 				// ------------------------
 
-				grid = new THREE.GridHelper( 3000, 20 );
+				grid = new THREE.GridHelper( 3000, 300, 0x555555, 0xbbbbbb );
 				grid.material.transparent = true;
-				grid.setColors( 0x555555, 0xbbbbbb );
 				// grid.position.y = -200;
 				scene.add( grid );
 

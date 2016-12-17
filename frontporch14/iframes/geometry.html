@@ -114,17 +114,25 @@
         mesh4.rotation.x = -(Math.PI / 6);
         scene.add( mesh4 );
 
-        wireframe = new THREE.WireframeHelper( mesh1, 0x000000 );
-        scene.add( wireframe );
+        wireframe = new THREE.WireframeGeometry( cube );
+        line = new THREE.LineSegments( wireframe );
+        line.material.color.setHex(0x000000);
+        mesh1.add( line );
 
-        wireframe = new THREE.WireframeHelper( mesh2, 0x000000 );
-        scene.add( wireframe );
+        wireframe = new THREE.WireframeGeometry( sphere );
+        line = new THREE.LineSegments( wireframe );
+        line.material.color.setHex(0x000000);
+        mesh2.add( line );
 
-        wireframe = new THREE.WireframeHelper( mesh3, 0x000000 );
-        scene.add( wireframe );
+        wireframe = new THREE.WireframeGeometry( cylinder );
+        line = new THREE.LineSegments( wireframe );
+        line.material.color.setHex(0x000000);
+        mesh3.add( line );
 
-        wireframe = new THREE.WireframeHelper( mesh4, 0x000000 );
-        scene.add( wireframe );
+        wireframe = new THREE.WireframeGeometry( torus );
+        line = new THREE.LineSegments( wireframe );
+        line.material.color.setHex(0x000000);
+        mesh4.add( line );
 
         // setupTween();
 

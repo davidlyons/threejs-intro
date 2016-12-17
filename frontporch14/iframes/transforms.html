@@ -48,8 +48,6 @@
 
       var mesh;
 
-      var helper;
-
       var mouseX = 0, mouseY = 0;
 
       var clock = new THREE.Clock();
@@ -90,8 +88,10 @@
         // mesh.position.set( 0, -45, 0 );
         scene.add( mesh );
 
-        helper = new THREE.WireframeHelper( mesh, 0x000000 );
-        scene.add( helper );
+        var wireframe = new THREE.WireframeGeometry( geometry );
+        var line = new THREE.LineSegments( wireframe );
+        line.material.color.setHex(0x000000);
+        mesh.add( line );
 
 
         // setupTween();

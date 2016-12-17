@@ -82,7 +82,7 @@
 
     <section class="slide">
       <h2>three.js</h2>
-      <p><a href="http://threejs.org/" target="_blank">threejs.org</a></p>
+      <p><a href="https://threejs.org/" target="_blank">threejs.org</a></p>
       <p class="slide">3D Javascript Library</p>
       <p class="slide">Renderers: WebGL, &lt;canvas&gt;, &lt;svg&gt;, CSS3D / DOM, and more</p>
       <p class="slide">Scenes, Cameras, Geometry, 3D Model Loaders, Lights, Materials,<br>Shaders, Particles, Animation, Math Utilities</p>
@@ -385,9 +385,9 @@ material.color.getHSL()</code></pre>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.SpotLight( 0xb4e7f2, 0.8 );</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light.angle = Math.PI / 9;</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light.angle = Math.PI / 5;</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>light.penumbra = 0.1;</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>light.penumbra = 0.4;</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light.penumbra = 0;</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>light.penumbra = 0.2;</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>light.penumbra = 0.8;</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.AmbientLight( 0x444444 );</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.AmbientLight( 0x000000 );</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>light = new THREE.AmbientLight( 0x444444 );</code></pre></div>
@@ -453,16 +453,17 @@ loader.load("teapot.js", function( geometry, materials ) {
     <section class="slide">
       <h2>Helpers</h2>
       <iframe src="iframes/helpers.html" frameborder="0"></iframe>
-<div class="slide temp abs-bc"><pre><code>var wireframe = new THREE.WireframeHelper( mesh, hex );
-scene.add( wireframe );</code></pre></div>
-<div class="slide temp abs-bc"><pre><code>var grid = new THREE.GridHelper( size, step );
+<div class="slide temp abs-bc"><pre style="font-size: 30px;"><code style="font-size: 30px;">var wireframe = new THREE.WireframeGeometry( mesh.geometry, hex );
+var line = new THREE.LineSegments( wireframe );
+line.material.color.setHex( 0x333333 );
+mesh.add( line );</code></pre></div>
+<div class="slide temp abs-bc"><pre><code>var grid = new THREE.GridHelper( size, divisions );
 scene.add( grid );</code></pre></div>
 <div class="slide temp abs-bc"><pre style="font-size: 30px;"><code style="font-size: 30px;">var lightHelper = new THREE.DirectionalLightHelper( light, size );
 scene.add( lightHelper );</code></pre></div>
 <div class="slide temp abs-bc"><pre><code>var axis = new THREE.AxisHelper( size );
 object.add( axis );</code></pre></div>
 <div class="slide temp abs-bc"><pre><code>var box = new THREE.BoxHelper( object );</code></pre></div>
-<div class="slide temp abs-bc"><pre><code>var bbox = new THREE.BoundingBoxHelper( object, hex );</code></pre></div>
 <!-- <div class="slide temp abs-bc"><pre style="font-size: 33px;"><code style="font-size: 33px;">var vnh = new THREE.VertexNormalsHelper( object, size, hex );
 scene.add( vnh );</code></pre></div> -->
 <!-- <div class="slide temp abs-bc"><pre><code>Arrow Helper?</code></pre></div> -->
@@ -645,24 +646,27 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
 
     <section class="slide">
       <h2>WebVR</h2>
+
       <p>
+        <a href="http://webvr.info/" target="_blank">webvr.info</a><br><br>
+        Experimental builds of <a href="https://webvr.info/get-chrome/" target="_blank">Chrome</a> and <a href="http://mozvr.com/" target="_blank">Firefox</a><br><br>
+        <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/controls/VRControls.js" target="_blank">VR Controls</a>, <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/effects/VREffect.js" target="_blank">VR Effect</a>
+        <!-- <br><a href="https://github.com/borismus/webvr-boilerplate" target="_blank">Responsive WebVR Boilerplate</a> -->
+      </p>
+
+      <!-- Out of date -->
+      <!-- <p>
         Oculus Rift DK1 support only:<br>
         <a href="https://github.com/Instrument/oculus-bridge" target="_blank">github.com/Instrument/oculus-bridge</a>/web/build/OculusBridge.min.js<br>
         <a href="../../slingshot-panorama/rift.html" target="_blank">Cubemap</a>, <a href="http://www.shapespark.com/" target="_blank">shapespark.com</a>
-      </p>
+      </p> -->
 
-      <p>
+      <!-- Fallback -->
+      <!-- <p>
         <a href="http://vr.chromeexperiments.com/" target="_blank">vr.chromeexperiments.com</a><br>
         <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/controls/DeviceOrientationControls.js" target="_blank">Device Orientation Controls</a>, <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/effects/StereoEffect.js" target="_blank">Stereo Effect</a><br>
         <a href="../../slingshot-panorama/vr.html" target="_blank">Cubemap</a>
-      </p>
-
-      <p>
-        <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/controls/VRControls.js" target="_blank">VR Controls</a>, <a href="https://github.com/mrdoob/three.js/blob/master/examples/js/effects/VREffect.js" target="_blank">VR Effect</a><br>
-        <a href="http://webvr.info/" target="_blank">webvr.info</a>, <a href="http://mozvr.com/" target="_blank">mozvr.com</a><br>
-        Experimental builds of <a href="http://mozvr.com/downloads/">Firefox</a> and <a href="https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ&usp=sharing#list" target="_blank">Chrome</a><br>
-        <a href="https://github.com/borismus/webvr-boilerplate" target="_blank">Responsive WebVR Boilerplate</a>
-      </p>
+      </p> -->
 
       <!-- Cardboard 2014 -->
       <!-- https://www.youtube.com/watch?v=DFog2gMnm44 -->

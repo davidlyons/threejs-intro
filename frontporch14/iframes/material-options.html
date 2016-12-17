@@ -103,9 +103,11 @@
         vnh.visible = false;
         mesh.add( vnh );
 
-        wfh = new THREE.WireframeHelper( mesh, 0x000000 );
+        wireframe = new THREE.WireframeGeometry( geometry );
+        wfh = new THREE.LineSegments( wireframe );
+        wfh.material.color.setHex(0x000000);
         wfh.visible = false;
-        scene.add( wfh );
+        mesh.add( wfh );
 
         renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
         // renderer.setClearColor( 0xBBBBBB, 1 );

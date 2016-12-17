@@ -104,7 +104,7 @@
 
 
         // spot light
-        sLight = new THREE.SpotLight( lightBlue, 0.8, 0, Math.PI/9, 0.1 ); // hex, intensity, distance, angle, penumbra
+        sLight = new THREE.SpotLight( lightBlue, 0.8, 0, Math.PI/9, 0.4 ); // hex, intensity, distance, angle, penumbra
         sLight.position.set( -80, 80, 80 );
         scene.add( sLight );
 
@@ -335,13 +335,13 @@
           setupTween(sLight, 'angle', Math.PI/5); // should be no more than Math.PI/2
         }
         else if (step == 16) {
-          setupTween(sLight, 'penumbra', 0.1);
+          setupTween(sLight, 'penumbra', 0.4);
         }
         else if (step == 17) {
           setupTween(sLight, 'penumbra', 0);
         }
         else if (step == 18) {
-          setupTween(sLight, 'penumbra', 0.2);
+          setupTween(sLight, 'penumbra', 0.8);
           sLightHelper.visible = true;
         }
         else if (step == 19) {
