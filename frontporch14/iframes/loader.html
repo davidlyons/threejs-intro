@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Three.js JSON Loader</title>
+    <title>Three.js Object Loader</title>
     
     <style type="text/css">
       html { overflow: hidden; }
@@ -28,7 +28,7 @@
 
     <div id="container"></div>
     
-    <script src="three/three.min.js"></script>
+    <script src="three/three.js"></script>
     <script src="three/controls/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
     <script src="three/libs/stats.min.js"></script>
@@ -112,24 +112,19 @@
 
         
         // var material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
-
         // var material = new THREE.MeshBasicMaterial({ color: 0x333333, wireframe: true });
         var material = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide });
 
-        var loader = new THREE.JSONLoader();
-        loader.load( "models/teapot.js", function( geometry, materials ) {
-          // console.log(materials);
+        var objloader = new THREE.ObjectLoader();
+        objloader.load( "models/teapot.json", function( group ) {
 
-          mesh = new THREE.Mesh( geometry, material );
+          mesh = group.children[0];
+          mesh.material = material;
           mesh.scale.set(4,4,4);
           mesh.position.y = -30;
           scene.add( mesh );
 
-          // helper = new THREE.WireframeHelper( mesh, 0x333333 );
-          // scene.add( helper );
         });
-
-        
 
 
         // setupTween();

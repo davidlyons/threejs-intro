@@ -87,7 +87,7 @@
         // scene.add( lightHelper );
 
         // materials
-        var materialPhong = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, shininess: 40, shading: THREE.SmoothShading });
+        var materialPhong = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, shininess: 40, flatShading: false });
 
         geometry = new THREE.SphereGeometry( 60, 24, 16 );
         // , 0, Math.PI * 2, Math.PI / 4, Math.PI / 2
@@ -207,11 +207,11 @@
         // console.log(step);
         
         if   (step == 1) {
-          mesh.material.shading = THREE.SmoothShading; // default
+          mesh.material.flatShading = false; // default
           mesh.material.needsUpdate = true;
         }
         else if (step == 2) {
-          mesh.material.shading = THREE.FlatShading;
+          mesh.material.flatShading = true;
           mesh.material.needsUpdate = true;
           fnh.visible = false;
         }
@@ -219,7 +219,7 @@
           fnh.visible = true;
           wfh.visible = false;
 
-          mesh.material.shading = THREE.FlatShading; // default
+          mesh.material.flatShading = true;
           mesh.material.needsUpdate = true;
         }
         else if (step == 4) {
@@ -227,7 +227,7 @@
           vnh.visible = false;
           wfh.visible = true;
 
-          mesh.material.shading = THREE.FlatShading; // default
+          mesh.material.flatShading = true;
           mesh.material.needsUpdate = true;
         }
         else if (step == 5) {
@@ -235,7 +235,7 @@
           vnh.visible = true;
           wfh.visible = true;
 
-          mesh.material.shading = THREE.SmoothShading; // default
+          mesh.material.flatShading = false; // default
           mesh.material.needsUpdate = true;
         }
         else if (step == 6) {

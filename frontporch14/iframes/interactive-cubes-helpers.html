@@ -20,7 +20,7 @@
 	</head>
 	<body>
 
-		<script src="three/three.min.js"></script>
+		<script src="three/three.js"></script>
 		<script src="three/controls/OrbitControls.js"></script>
 		<script src="three/libs/stats.min.js"></script>
 		<script src="three/libs/dat.gui.min.js"></script>
@@ -77,7 +77,7 @@
 
 				// cameraPerspective.rotation.y = Math.PI;
 
-				cameraRig = new THREE.Object3D();
+				cameraRig = new THREE.Group();
 
 				cameraRig.add( cameraPerspective );
 
@@ -90,7 +90,7 @@
 				// Lights
 
 				var aLight = new THREE.AmbientLight( 0x444444 );
-				scene.add( aLight )
+				scene.add( aLight );
 
 				var light = new THREE.DirectionalLight( 0xffffff, 0.9 );
 				light.position.set( 1, 1, 1 ).normalize();
@@ -102,7 +102,7 @@
 
 				var geometry = new THREE.BoxGeometry( 30, 30, 30 );
 
-				group = new THREE.Object3D();
+				group = new THREE.Group();
 				scene.add( group );
 
 				for ( var i = 0; i < 150; i ++ ) {
@@ -138,7 +138,7 @@
 				// cursor.add( new THREE.AxisHelper( 30 ) );
 				
 				// screen helper
-				grid = new THREE.GridHelper( 9.5, 1 );
+				grid = new THREE.GridHelper( 19, 1 );
 				grid.rotation.x = Math.PI/2;
 				grid.scale.x *= 16;
 				grid.scale.z *= 9;

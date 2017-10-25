@@ -291,11 +291,11 @@ controls.maxPolarAngle</code></pre></div>
     <section class="slide">
       <h2>Material Properties</h2>
       <iframe src="iframes/material-options.html" frameborder="0"></iframe>
-      <div class="temp abs-bc"><pre><code>shading: THREE.SmoothShading</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>shading: THREE.FlatShading</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>shading: THREE.FlatShading // face normals</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>shading: THREE.FlatShading // face normals</code></pre></div>
-      <div class="slide temp abs-bc"><pre><code>shading: THREE.SmoothShading // vertex normals</code></pre></div>
+      <div class="temp abs-bc"><pre><code>flatShading: false</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>flatShading: true</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>flatShading: true // face normals</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>flatShading: true // face normals</code></pre></div>
+      <div class="slide temp abs-bc"><pre><code>flatShading: false // vertex normals</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>color: 0xaaaaaa</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>color: 0x3794cf</code></pre></div>
       <div class="slide temp abs-bc"><pre><code>shininess: 40</code></pre></div>
@@ -376,20 +376,20 @@ var texture = loader.load("color-map.jpg");</code></pre></div>
 
     <section class="slide">
       <h2>Model Converter</h2>
-      <p>OBJ to JSON converter python tool<br>
-        /three.js/utils/converters/obj/convert_obj_three.py</p>
+      <p>OBJ to JSON converter Node tool<br>
+        <a href="https://github.com/mrdoob/three.js/blob/dev/utils/converters/obj2three.js" target="_blank">/three.js/utils/converters/obj2three.js</a></p>
       <p><img src="images/obj-json.png" alt=""></p>
-      <div class="temp abs-bc"><pre><code class="language-python">python convert_obj_three.py -i teapot.obj -o teapot.js</code></pre></div>
+      <div class="temp abs-bc"><pre><code>node obj2three.js teapot.obj</code></pre></div>
     </section>
 
     <section class="slide">
       <iframe src="iframes/loader.html" frameborder="0"></iframe>
       <h2>Model Loader</h2>
-<div class="slide temp abs-bc"><pre><code>var loader = new THREE.JSONLoader();
+<div class="slide temp abs-bc"><pre><code>var loader = new THREE.ObjectLoader();
 
-loader.load("teapot.js", function( geometry, materials ) {
-  material = new THREE.MultiMaterial( materials );
-  mesh = new THREE.Mesh( geometry, material );
+loader.load("teapot.json", function( group ) {
+  mesh = group.children[0];
+  mesh.material = new THREE.MeshPhongMaterial();
   scene.add( mesh );
 });</code></pre></div>
     </section>
