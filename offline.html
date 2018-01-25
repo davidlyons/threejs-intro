@@ -229,7 +229,7 @@ mesh.position.y = Math.sin( time );</code></pre></div>
 
     <section class="slide">
       <h2>Camera Controls</h2>
-      <p>/three.js/examples/js/controls/OrbitControls.js</p>
+      <p><a href="https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.js" target="_blank">/three.js/examples/js/controls/OrbitControls.js</a></p>
 <div class="slide temp"><pre><code class="language-markup">&lt;script src="path/to/OrbitControls.js"&gt;&lt;/script&gt;</code>
 
 <code class="language-javascript">controls = new THREE.OrbitControls( camera );
@@ -429,17 +429,14 @@ mouse<span class="token punctuation">.</span>y <span class="token operator">=</s
 
 raycaster <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Raycaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="interaction2"><span class="token keyword">var</span> vector <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Vector3</span><span class="token punctuation">(</span> mouse<span class="token punctuation">.</span>x<span class="token punctuation">,</span> mouse<span class="token punctuation">.</span>y<span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">unproject<span class="token punctuation">(</span></span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="interaction2">raycaster<span class="token punctuation">.</span><span class="token function">setFromCamera<span class="token punctuation">(</span></span> mouse<span class="token punctuation">,</span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 
-<span class="interaction3">raycaster<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span> camera<span class="token punctuation">.</span>position<span class="token punctuation">,</span> vector<span class="token punctuation">.</span><span class="token function">sub<span class="token punctuation">(</span></span> camera<span class="token punctuation">.</span>position <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">normalize<span class="token punctuation">(</span></span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
-
-<span class="interaction4"><span class="token keyword">var</span> intersects <span class="token operator">=</span> raycaster<span class="token punctuation">.</span><span class="token function">intersectObjects<span class="token punctuation">(</span></span> scene<span class="token punctuation">.</span>children <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="interaction3"><span class="token keyword">var</span> intersects <span class="token operator">=</span> raycaster<span class="token punctuation">.</span><span class="token function">intersectObjects<span class="token punctuation">(</span></span> scene<span class="token punctuation">.</span>children <span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 INTERSECTED <span class="token operator">=</span> intersects<span class="token punctuation">[</span> <span class="token number">0</span> <span class="token punctuation">]</span><span class="token punctuation">.</span>object<span class="token punctuation">;</span></span></code></pre>
       <div class="slide" id="interaction1"></div>
       <div class="slide" id="interaction2"></div>
       <div class="slide" id="interaction3"></div>
-      <div class="slide" id="interaction4"></div>
     </section>
 
     <section class="slide">

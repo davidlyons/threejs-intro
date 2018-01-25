@@ -29,7 +29,7 @@
     <div id="container"></div>
     
     <script src="three/three.min.js"></script>
-    <script src="three/controls/OrbitControls.js"></script>
+    <script src="three/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
     <script src="three/libs/stats.min.js"></script>
     <script src="three/libs/dat.gui.min.js"></script>
@@ -49,7 +49,7 @@
 
       var mesh;
 
-      var wfh, grid, box, bbox, axis, fnh, vnh;
+      var wfh, grid, box, bbox, axes, fnh, vnh;
 
       var keyLightHelper, fillLightHelper, rimLightHelper;
 
@@ -143,8 +143,8 @@
         box.visible = false;
         scene.add( box );
 
-        axis = new THREE.AxisHelper( 40 );
-        // mesh.add( axis );
+        axes = new THREE.AxesHelper( 40 );
+        // mesh.add( axes );
 
         // fnh = new THREE.FaceNormalsHelper( mesh, 10, 0xff0000 );
         // fnh.visible = false;
@@ -230,7 +230,7 @@
 
         if (mesh) {
           mesh.rotation.y -= 0.5 * delta;
-          box.update( mesh );
+          box.update();
           // fnh.update();
           vnh.update();
         }
@@ -290,7 +290,7 @@
           wfh.visible = false;
           grid.visible = false;
           box.visible = false;
-          mesh.remove( axis );
+          mesh.remove( axes );
           vnh.visible = false;
           keyLightHelper.visible = true;
           fillLightHelper.visible = true;
@@ -300,7 +300,7 @@
           wfh.visible = false;
           grid.visible = false;
           box.visible = false;
-          mesh.add( axis );
+          mesh.add( axes );
           vnh.visible = false;
           keyLightHelper.visible = false;
           fillLightHelper.visible = false;
@@ -310,7 +310,7 @@
           wfh.visible = false;
           grid.visible = false;
           box.visible = true;
-          mesh.remove( axis );
+          mesh.remove( axes );
           vnh.visible = false;
           keyLightHelper.visible = false;
           fillLightHelper.visible = false;
