@@ -150,7 +150,7 @@ $(function() {
 
       controller.addEventListener( 'bumper-left press began', prev );
       controller.addEventListener( 'trigger-left press began', prev );
-      controller.addEventListener( 'd-left press began', next );
+      controller.addEventListener( 'd-left press began', prev );
       controller.addEventListener( 'thumbstick-left left press began', prev );
       controller.addEventListener( 'thumbstick-right left press began', prev );
 
