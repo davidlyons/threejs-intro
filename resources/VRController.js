@@ -723,7 +723,7 @@ THREE.VRController.prototype.applyVibes = function(){
 //  This makes inspecting through the console a little bit saner.
 //  Expected values range from 0 (silent) to 1 (everything).
 
-THREE.VRController.verbosity = 0.5;//0.5
+THREE.VRController.verbosity = 0;//0.5
 
 
 //  We need to keep a record of found controllers
