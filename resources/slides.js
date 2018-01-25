@@ -121,6 +121,51 @@ $(function() {
 
   });
 
-  if (location.hash == "") location.hash = "slide-0";
-  
+  if ( location.hash == "" ) {
+    location.hash = "slide-0";
+  }
+
+
+  // xbox controller navigation
+
+  window.addEventListener( 'vr controller connected', function( event ){
+
+    var controller = event.detail;
+
+    function next( event ){
+      $.deck('next');
+    }
+
+    function prev( event ){
+      $.deck('prev');
+    }
+
+    if ( controller.style == 'xbox' ) {
+
+      controller.addEventListener( 'bumper-right press began', next );
+      controller.addEventListener( 'trigger-right press began', next );
+      controller.addEventListener( 'd-right press began', next );
+      controller.addEventListener( 'thumbstick-left right press began', next );
+      controller.addEventListener( 'thumbstick-right right press began', next );
+
+      controller.addEventListener( 'bumper-left press began', prev );
+      controller.addEventListener( 'trigger-left press began', prev );
+      controller.addEventListener( 'd-left press began', next );
+      controller.addEventListener( 'thumbstick-left left press began', prev );
+      controller.addEventListener( 'thumbstick-right left press began', prev );
+
+    } else {
+
+      controller.addEventListener( 'primary press began', next );
+
+    }
+
+  });
+
+  loop();
+  function loop() {
+    requestAnimationFrame( loop );
+    THREE.VRController.update();
+  }
+
 });
