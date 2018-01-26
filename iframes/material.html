@@ -46,7 +46,7 @@
 
       var camera, controls, scene, renderer;
 
-      var mesh1, mesh2, mesh3, mesh4, geometry, vnh;
+      var mesh1, mesh2, mesh3, mesh4, mesh5, mesh6, geometry, vnh;
 
       var helper;
 
@@ -92,9 +92,11 @@
         var materialBasic = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
         var materialLambert = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
         var materialPhong = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, shininess: 40 });
+        var materialStandard = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness: 0.6 });
+        var materialToon = new THREE.MeshToonMaterial({ color: 0xaaaaaa, shininess: 1 });
         var materialNormal = new THREE.MeshNormalMaterial();
 
-        var size = 60;
+        var size = 50;
         var num = 4;
 
         geometry = new THREE.SphereGeometry( size, 24, 16 );
@@ -105,22 +107,30 @@
         // geometry.computeVertexNormals();
 
         mesh1 = new THREE.Mesh( geometry, materialBasic );
-        mesh1.position.x = -210;
+        mesh1.position.x = -300;
         scene.add( mesh1 );
 
         mesh2 = new THREE.Mesh( geometry.clone(), materialLambert );
-        mesh2.position.x = -70;
+        mesh2.position.x = -180;
         scene.add( mesh2 );
 
         mesh3 = new THREE.Mesh( geometry.clone(), materialPhong );
-        mesh3.position.x = 70;
+        mesh3.position.x = -60;
         scene.add( mesh3 );
 
-        mesh4 = new THREE.Mesh( geometry.clone(), materialNormal );
-        mesh4.position.x = 210;
+        mesh4 = new THREE.Mesh( geometry.clone(), materialStandard );
+        mesh4.position.x = 60;
         scene.add( mesh4 );
 
-        vnh = new THREE.VertexNormalsHelper( mesh4, 15, 0x333333 );
+        mesh5 = new THREE.Mesh( geometry.clone(), materialToon );
+        mesh5.position.x = 180;
+        scene.add( mesh5 );
+
+        mesh6 = new THREE.Mesh( geometry.clone(), materialNormal );
+        mesh6.position.x = 300;
+        scene.add( mesh6 );
+
+        vnh = new THREE.VertexNormalsHelper( mesh6, 15, 0x333333 );
         vnh.visible = false;
         scene.add(vnh);
 
@@ -258,12 +268,27 @@
         }
         else if (step == 5) {
           setupTween( camera.position, 'x', mesh4.position.x );
+          setupTween( mesh2.position, 'y', 0 );
           setupTween( mesh3.position, 'y', 0 );
           setupTween( mesh4.position, 'y', 20 );
+          setupTween( mesh5.position, 'y', 0 );
+        }
+        else if (step == 6) {
+          setupTween( camera.position, 'x', mesh5.position.x );
+          setupTween( mesh2.position, 'y', 0 );
+          setupTween( mesh3.position, 'y', 0 );
+          setupTween( mesh4.position, 'y', 0 );
+          setupTween( mesh5.position, 'y', 20 );
+          setupTween( mesh6.position, 'y', 0 );
+        }
+        else if (step == 7) {
+          setupTween( camera.position, 'x', mesh6.position.x );
+          setupTween( mesh5.position, 'y', 0 );
+          setupTween( mesh6.position, 'y', 20 );
           
           vnh.visible = false;
         }
-        else if (step == 6) {
+        else if (step == 8) {
           vnh.visible = true;
         }
       }
@@ -276,7 +301,7 @@
 
       function forward() {
         step++;
-        if (step > 6) { step = 6; return; }
+        if (step > 8) { step = 8; return; }
         applyStep(step);
       }
 
