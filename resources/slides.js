@@ -114,9 +114,11 @@ $(function() {
     });
 
     // Google Analytics
-    if('ga' in window) {
-      var path = location.pathname.replace('index.html','') + '-slide-' + (to+1);
-      ga('send', 'pageview', path);
+    if (window.gtag) {
+      gtag('event', 'page_view', {
+        // todo: this is the same for all 3 .html files
+        'page_path': '/slide-' + to
+      });
     }
 
   });
