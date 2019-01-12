@@ -145,15 +145,42 @@ code {
   bottom: 0;
   margin: 0 !important;
 }
+.deck-nav {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+  margin-top: 370px;
+  width: 100px;
+  margin-left: -50px;
+}
+.deck-prev-link {
+  left: auto;
+}
+.deck-next-link {
+  right: auto;
+}
 .deck-prev-link,
 .deck-next-link {
-  line-height: 28px;
   font-size: 28px;
+  position: relative;
+  display: inline-block;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  margin-top: 0px;
 }
 .deck-prev-link:hover,
 .deck-next-link:hover {
   text-decoration: none;
-  background: #777;
+  background: rgba(0, 0, 0, 0.5);
+}
+.deck-prev-link:focus,
+.deck-next-link:focus {
+  text-decoration: none;
 }
 .deck-status {
   font-size: 18px;
@@ -258,7 +285,7 @@ code[class*="language-"] {
 /* Code blocks */
 pre[class*="language-"] {
   padding: 1em;
-  margin: .5em 0;
+  margin: 0.5em 0;
   overflow: auto;
 }
 :not(pre) > code[class*="language-"],
@@ -270,8 +297,8 @@ pre[class*="language-"] {
 }
 /* Inline code */
 :not(pre) > code[class*="language-"] {
-  padding: .1em;
-  border-radius: .3em;
+  padding: 0.1em;
+  border-radius: 0.3em;
 }
 .token.comment,
 .token.prolog,
@@ -283,7 +310,7 @@ pre[class*="language-"] {
   color: #999;
 }
 .namespace {
-  opacity: .7;
+  opacity: 0.7;
 }
 .token.property,
 .token.tag,

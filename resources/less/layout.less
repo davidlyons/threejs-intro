@@ -153,14 +153,41 @@ code { font-family: 'Source Code Pro', monospace; }
 // extensions
 
 // navigation
+
+// bottom center
+.deck-nav {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+  margin-top: 370px;
+  width: 100px;
+  margin-left: -50px;
+}
+
+.deck-prev-link { left: auto; }
+.deck-next-link { right: auto; }
+
 .deck-prev-link,
 .deck-next-link {
-  line-height: 28px;
   font-size: 28px;
+  position: relative;
+  display: inline-block;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.3);
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  margin-top: 0px;
 
   &:hover {
     text-decoration: none;
-    background: #777;
+    background: rgba(0,0,0,0.5);
+  }
+
+  &:focus {
+    text-decoration: none;
   }
 }
 
