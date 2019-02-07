@@ -25,13 +25,15 @@
     
     <script src="three/three.min.js"></script>
     <script src="three/OrbitControls.js"></script>
-    <script src="three/Detector.js"></script>
+    <script src="three/WebGL.js"></script>
     <script src="three/libs/dat.gui.min.js"></script>
     <script src="three/libs/tween.min.js"></script>
 
     <script>
 
-      if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+      if ( !WEBGL.isWebGLAvailable() ) {
+        document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+      }
 
       var container;
 
@@ -110,6 +112,7 @@
 
         controls = new THREE.OrbitControls( camera, renderer.domElement );
         controls.enableKeys = false;
+        controls.screenSpacePanning = true;
 
         //
 

@@ -10,6 +10,7 @@
 </head>
 <body>
   <script src="three/three.min.js"></script>
+  <script src="three/LegacyJSONLoader.js"></script>
   <script>
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -39,7 +40,7 @@
     var cube = new THREE.Mesh(geometry, material);
     group.add(cube);
 
-    var loader = new THREE.JSONLoader();
+    var loader = new THREE.LegacyJSONLoader();
     var pumpkin;
     loader.load( "models/pumpkin.js", function( geometry, materials ) {
       pumpkin = new THREE.Mesh( geometry, materials );

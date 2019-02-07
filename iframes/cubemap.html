@@ -25,13 +25,16 @@
 
 		<script src="three/three.min.js"></script>
 		<script src="three/OrbitControls.js"></script>
-		<script src="three/Detector.js"></script>
+		<script src="three/WebGL.js"></script>
 		<!-- <script src="three/libs/dat.gui.min.js"></script> -->
 		<script src="three/libs/tween.min.js"></script>
+		<script src="three/LegacyJSONLoader.js"></script>
 
 		<script>
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			if ( !WEBGL.isWebGLAvailable() ) {
+				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+			}
 
 			var container;
 
@@ -157,7 +160,7 @@
 				// group.add(gh);
 
 
-				loader = new THREE.JSONLoader();
+				loader = new THREE.LegacyJSONLoader();
 
 				loader.load( "models/teapot.js", function( geometry ) {
 					createScene( geometry, cubeMaterial1, cubeMaterial2, cubeMaterial3 )

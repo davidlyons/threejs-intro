@@ -38,11 +38,13 @@
 
 		<script src="three/three.min.js"></script>
 
-		<script src="three/Detector.js"></script>
+		<script src="three/WebGL.js"></script>
 
 		<script>
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			if ( !WEBGL.isWebGLAvailable() ) {
+				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+			}
 
 			var container;
 			var camera, scene, renderer, particles, geometry, materials = [], parameters, i, h, color, size;

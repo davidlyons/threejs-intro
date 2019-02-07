@@ -41,11 +41,13 @@
 
 		<script src="three/OrbitControls.js"></script>
 
-		<script src="three/Detector.js"></script>
+		<script src="three/WebGL.js"></script>
 
 		<script>
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			if ( !WEBGL.isWebGLAvailable() ) {
+				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+			}
 
 			var camera, controls, scene, renderer;
 
