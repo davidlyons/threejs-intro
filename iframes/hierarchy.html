@@ -17,11 +17,10 @@
 	<body>
 
 		<script src="three/three.min.js"></script>
-		<script src="three/libs/stats.min.js"></script>
 
 		<script>
 
-			var container, stats;
+			var container;
 
 			var camera, scene, renderer;
 
@@ -134,12 +133,6 @@
 				renderer.sortObjects = false;
 				container.appendChild( renderer.domElement );
 
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				stats.domElement.style.zIndex = 100;
-				container.appendChild( stats.domElement );
-
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -172,7 +165,6 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
 
 			}
 

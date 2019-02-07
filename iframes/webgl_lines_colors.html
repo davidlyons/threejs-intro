@@ -49,7 +49,6 @@
 		<script src="three/geometries/hilbert3D.js"></script>
 
 		<script src="three/Detector.js"></script>
-		<script src="three/libs/stats.min.js"></script>
 
 		<script>
 
@@ -136,13 +135,6 @@
 
 				//
 
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				//container.appendChild( stats.domElement );
-
-				//
-
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
 				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
@@ -205,8 +197,6 @@
 
 				requestAnimationFrame( animate );
 				render();
-
-				stats.update();
 
 			}
 

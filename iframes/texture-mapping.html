@@ -17,11 +17,6 @@
       a { color: #0088cc; text-decoration: none; }
       a:hover, a:focus { color: #005580; text-decoration: underline; }
 
-      /* stats */
-      #fps, #ms { background: transparent !important; }
-      #fpsText, #msText { color: #777 !important; }
-      #fpsGraph, #msGraph { display: none; }
-
       #texture { position: absolute; top: 50%; left: 80px; margin-top: -160px; width: 560px; height: 280px; border: 1px solid #333; background-size: contain; }
 
       .color-map { background-image: url('images/planets/earth_atmos_2048.jpg'); }
@@ -43,7 +38,6 @@
     <script src="three/three.min.js"></script>
     <script src="three/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
-    <script src="three/libs/stats.min.js"></script>
     <script src="three/libs/dat.gui.min.js"></script>
     <script src="three/libs/tween.min.js"></script>
 
@@ -53,7 +47,7 @@
       if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 
-      var container, stats;
+      var container;
 
       var camera, controls, scene, renderer;
 
@@ -204,11 +198,6 @@
         container.appendChild( renderer.domElement );
 
 
-        stats = new Stats();
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.top = '0px';
-        container.appendChild( stats.domElement );
-
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
         //
@@ -285,7 +274,6 @@
       function animate() {
         requestAnimationFrame( animate );
         render();
-        stats.update();
         TWEEN.update();
         controls.update();
       }

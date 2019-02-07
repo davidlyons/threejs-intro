@@ -15,11 +15,6 @@
 
       a { color: #0088cc; text-decoration: none; }
       a:hover, a:focus { color: #005580; text-decoration: underline; }
-
-      /* stats */
-      #fps, #ms { background: transparent !important; }
-      #fpsText, #msText { color: #aaa !important; }
-      #fpsGraph, #msGraph { display: none; }
     </style>
 
   </head>
@@ -31,7 +26,6 @@
     <script src="three/three.min.js"></script>
     <script src="three/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
-    <script src="three/libs/stats.min.js"></script>
     <script src="three/libs/dat.gui.min.js"></script>
     <script src="three/libs/tween.min.js"></script>
 
@@ -41,8 +35,6 @@
 
 
       var container;
-
-      var stats;
 
       var camera, controls, scene, renderer;
 
@@ -142,11 +134,6 @@
         controls = new THREE.OrbitControls( camera, renderer.domElement );
         controls.enableKeys = false;
 
-        stats = new Stats();
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.top = '0px';
-        container.appendChild( stats.domElement );
-
         // document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
         //
@@ -196,7 +183,6 @@
         requestAnimationFrame( animate );
         if (!paused) {
           render();
-          stats.update();
           controls.update();
           TWEEN.update();
         }

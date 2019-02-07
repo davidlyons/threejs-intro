@@ -42,13 +42,10 @@
 		<script src="three/OrbitControls.js"></script>
 
 		<script src="three/Detector.js"></script>
-		<script src="three/libs/stats.min.js"></script>
 
 		<script>
 
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-
-			var stats;
 
 			var camera, controls, scene, renderer;
 
@@ -109,14 +106,6 @@
 
 				//
 
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				stats.domElement.style.zIndex = 100;
-				container.appendChild( stats.domElement );
-
-				//
-
 				window.addEventListener( 'resize', onWindowResize, false );
 
 			}
@@ -135,8 +124,6 @@
 				requestAnimationFrame( animate );
 
 				controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
-
-				stats.update();
 
 				render();
 

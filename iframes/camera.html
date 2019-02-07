@@ -15,18 +15,12 @@
 				margin: 0px;
 				overflow: hidden;
 			}
-
-			#stats { position: absolute; top:0; left: 0 }
-			#stats #fps { background: transparent !important }
-			#stats #fps #fpsText { color: #777 !important }
-			#stats #fps #fpsGraph { display: none }
 		</style>
 	</head>
 	<body>
 
 		<script src="three/three.min.js"></script>
 		<script src="three/OrbitControls.js"></script>
-		<script src="three/libs/stats.min.js"></script>
 		<script src="three/libs/tween.min.js"></script>
 
 		<script>
@@ -34,7 +28,7 @@
 			var SCREEN_WIDTH = window.innerWidth;
 			var SCREEN_HEIGHT = window.innerHeight;
 
-			var container, stats;
+			var container;
 			var camera, scene, renderer, mesh, grid, controls;
 			var cameraRig, activeCamera, activeHelper;
 			var cameraPerspective, cameraOrtho;
@@ -178,11 +172,6 @@
 
 				//
 
-				stats = new Stats();
-				container.appendChild( stats.domElement );
-
-				//
-
 				window.addEventListener( 'resize', onWindowResize, false );
 
 			}
@@ -217,7 +206,6 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
 				TWEEN.update();
 				// controls.update();
 			}

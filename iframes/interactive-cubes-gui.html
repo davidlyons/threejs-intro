@@ -17,12 +17,11 @@
 
 		<script src="three/three.min.js"></script>
 		<script src="three/OrbitControls.js"></script>
-		<script src="three/libs/stats.min.js"></script>
 		<script src="three/libs/dat.gui.min.js"></script>
 
 		<script>
 
-			var container, stats;
+			var container;
 			var camera, controls, scene, projector, raycaster, renderer;
 			var mesh;
 
@@ -115,16 +114,8 @@
 
 				setupGui();
 
-
-
 				projector = new THREE.Projector();
 				raycaster = new THREE.Raycaster();
-
-
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				container.appendChild( stats.domElement );
 
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
@@ -173,7 +164,6 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
 				controls.update();
 
 			}

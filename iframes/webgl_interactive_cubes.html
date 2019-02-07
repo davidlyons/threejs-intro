@@ -17,11 +17,9 @@
 
 		<script src="three/three.min.js"></script>
 
-		<script src="three/libs/stats.min.js"></script>
-
 		<script>
 
-			var container, stats;
+			var container;
 			var camera, scene, raycaster, renderer;
 
 			var mouse = new THREE.Vector2(), INTERSECTED;
@@ -81,11 +79,6 @@
 				renderer.sortObjects = false;
 				container.appendChild(renderer.domElement);
 
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				container.appendChild( stats.domElement );
-
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 				//
@@ -119,7 +112,6 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
 
 			}
 

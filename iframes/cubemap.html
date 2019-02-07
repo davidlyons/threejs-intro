@@ -18,11 +18,6 @@
 			a:hover { color: #0080ff; }
 
 			canvas { pointer-events:none; z-index:10; }
-
-			/* stats */
-			#fps, #ms { background: transparent !important; }
-			#fpsText, #msText { color: #555 !important; }
-			#fpsGraph, #msGraph { display: none; }
 		</style>
 	</head>
 
@@ -31,7 +26,6 @@
 		<script src="three/three.min.js"></script>
 		<script src="three/OrbitControls.js"></script>
 		<script src="three/Detector.js"></script>
-		<script src="three/libs/stats.min.js"></script>
 		<!-- <script src="three/libs/dat.gui.min.js"></script> -->
 		<script src="three/libs/tween.min.js"></script>
 
@@ -39,7 +33,7 @@
 
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
-			var container, stats;
+			var container;
 
 			var camera, scene, renderer;
 			var cameraCube, sceneCube;
@@ -159,14 +153,6 @@
 
 				//
 
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				stats.domElement.style.zIndex = 100;
-				container.appendChild( stats.domElement );
-
-				//
-
 				// var gh = new THREE.GridHelper( 500, 50 );
 				// group.add(gh);
 
@@ -240,7 +226,6 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
 				controls.update();
 				TWEEN.update();
 			}

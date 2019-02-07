@@ -11,24 +11,18 @@
 				margin: 0px;
 				overflow: hidden;
 			}
-
-			/* stats */
-			#fps, #ms { background: transparent !important; }
-			#fpsText, #msText { color: #aaa !important; }
-			#fpsGraph, #msGraph { display: none; }
 		</style>
 	</head>
 	<body>
 
 		<script src="three/three.min.js"></script>
 		<script src="three/OrbitControls.js"></script>
-		<script src="three/libs/stats.min.js"></script>
 		<script src="three/libs/dat.gui.min.js"></script>
 		<script src="three/libs/tween.min.js"></script>
 
 		<script>
 
-			var container, stats;
+			var container;
 			var camera, cameraPerspective, cameraPerspectiveHelper, cameraRig, controls
 			var scene, raycaster, renderer;
 			var cursor, group;
@@ -168,13 +162,6 @@
 
 				tween.start();
 
-
-
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				container.appendChild( stats.domElement );
-
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 				//
@@ -222,7 +209,6 @@
 				requestAnimationFrame( animate );
 
 				render();
-				stats.update();
 				controls.update();
 				TWEEN.update();
 			}
