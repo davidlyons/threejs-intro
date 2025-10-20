@@ -19,8 +19,9 @@
 
   <title>Intro to WebGL with Three.js</title>
 
-  <!-- <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" type="text/css">
-  <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css"> -->
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet"> -->
 
   <link rel="stylesheet" href="resources/fonts.css">
 
@@ -100,7 +101,7 @@
     </section>
 
     <section class="slide">
-<pre class="overlay-full language-markup" style="font-size: 32px;"><code style="font-size: 32px;">&lt;!DOCTYPE html&gt;
+<pre class="overlay-full language-markup" style="font-size: 23px;"><code style="font-size: 23px;">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;Basic Three.js App&lt;/title&gt;
@@ -109,10 +110,15 @@
     &lt;/style&gt;
   &lt;/head&gt;
   &lt;body&gt;
-    &lt;script src="js/three.min.js"&gt;&lt;/script&gt;
-    &lt;script&gt;
-      // Javascript will go here.
+    &lt;script type="importmap"&gt;
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@&lt;version&gt;/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@&lt;version&gt;/examples/jsm/"
+        }
+      }
     &lt;/script&gt;
+    &lt;script type="module" src="/main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
     </section>
@@ -122,8 +128,10 @@
 
 
     <section class="slide" id="scene-required">
-      <pre class="overlay-full language-none" style="font-size: 24px;">
-<code><span class="scene-required"><span class="token keyword">var</span> scene <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Scene</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+      <pre class="overlay-full language-none" style="font-size: 23px;">
+<code><span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> <span class="token constant">THREE</span> <span class="token keyword">from</span> <span class="token string">'three'</span><span class="token punctuation">;</span>
+
+<span class="scene-required"><span class="token keyword">var</span> scene <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Scene</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="token keyword">var</span> aspect <span class="token operator">=</span> window<span class="token punctuation">.</span>innerWidth <span class="token operator">/</span> window<span class="token punctuation">.</span>innerHeight<span class="token punctuation">;</span>
 <span class="scene-required"><span class="token keyword">var</span> camera <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>PerspectiveCamera</span><span class="token punctuation">(</span> <span class="token number">75</span><span class="token punctuation">,</span> aspect<span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">,</span> <span class="token number">1000</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">var</span> renderer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>WebGLRenderer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
@@ -135,14 +143,13 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
 <span class="token keyword">var</span> cube <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Mesh</span><span class="token punctuation">(</span> geometry<span class="token punctuation">,</span> material <span class="token punctuation">)</span><span class="token punctuation">;</span>
 scene<span class="token punctuation">.</span><span class="token function">add<span class="token punctuation">(</span></span> cube <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 camera<span class="token punctuation">.</span>position<span class="token punctuation">.</span>z <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span></div>
-<div class="slide" id="render-loop"><span class="render-loop"><span class="token keyword">var</span> render <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token function">requestAnimationFrame<span class="token punctuation">(</span></span> render <span class="token punctuation">)</span><span class="token punctuation">;</span>
-  cube<span class="token punctuation">.</span>rotation<span class="token punctuation">.</span>x <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">0.1</span><span class="token punctuation">;</span>
-  cube<span class="token punctuation">.</span>rotation<span class="token punctuation">.</span>y <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">0.1</span><span class="token punctuation">;</span>
-  renderer<span class="token punctuation">.</span><span class="token function">render<span class="token punctuation">(</span></span> scene<span class="token punctuation">,</span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></span>
+<div class="slide" id="render-loop"><span class="render-loop"><span class="token keyword">function</span> <span class="token function">animate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  cube<span class="token punctuation">.</span>rotation<span class="token punctuation">.</span>x <span class="token operator">+=</span> <span class="token number">0.1</span><span class="token punctuation">;</span>
+  cube<span class="token punctuation">.</span>rotation<span class="token punctuation">.</span>y <span class="token operator">+=</span> <span class="token number">0.1</span><span class="token punctuation">;</span>
+  renderer<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span> scene<span class="token punctuation">,</span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></span>
 
-<span class="token function">render<span class="token punctuation">(</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span></div></code></pre>
+renderer<span class="token punctuation">.</span><span class="token function">setAnimationLoop</span><span class="token punctuation">(</span> animate <span class="token punctuation">)</span><span class="token punctuation">;</span></div></code></pre>
     </section>
 
 
@@ -227,13 +234,13 @@ mesh.position.y = Math.sin( time );</code></pre></div>
 
     <section class="slide">
       <h2>Camera Controls</h2>
-      <p><a href="https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.js" target="_blank">/three.js/examples/js/controls/OrbitControls.js</a></p>
-<div class="slide temp"><pre><code class="language-markup">&lt;script src="path/to/OrbitControls.js"&gt;&lt;/script&gt;</code>
+      <p><a href="https://github.com/mrdoob/three.js/blob/dev/examples/jsm/controls/OrbitControls.js" target="_blank">/three.js/examples/jsm/controls/OrbitControls.js</a></p>
+<div class="slide temp"><pre style="font-size: 26px;"><code style="font-size: 26px;">import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-<code class="language-javascript">controls = new THREE.OrbitControls( camera );
+controls = new THREE.OrbitControls( camera );
 
-function render() {
-  requestAnimationFrame( render );
+function animate() {
+  requestAnimationFrame( animate );
   controls.update();
   renderer.render( scene, camera );
 }</code></pre></div>
@@ -375,20 +382,14 @@ var texture = loader.load("color-map.jpg");</code></pre></div>
     </section>
 
     <section class="slide">
-      <h2>Model Converter</h2>
-      <p>OBJ to JSON converter Node tool<br>
-        <a href="https://github.com/mrdoob/three.js/blob/dev/utils/converters/obj2three.js" target="_blank">/three.js/utils/converters/obj2three.js</a></p>
-      <p><img src="images/obj-json.png" alt=""></p>
-      <div class="temp abs-bc"><pre><code>node obj2three.js teapot.obj</code></pre></div>
-    </section>
-
-    <section class="slide">
       <iframe src="iframes/loader.html" frameborder="0"></iframe>
       <h2>Model Loader</h2>
-<div class="slide temp abs-bc"><pre><code>var loader = new THREE.ObjectLoader();
+<div class="slide temp abs-bc"><pre style="font-size: 30px"><code style="font-size: 30px">import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  
+const loader = new GLTFLoader();
 
-loader.load("teapot.json", function( group ) {
-  mesh = group.children[0];
+loader.load("teapot.glb", function( gltf ) {
+  mesh = gltf.scene.children[0];
   mesh.material = new THREE.MeshPhongMaterial();
   scene.add( mesh );
 });</code></pre></div>
@@ -423,13 +424,13 @@ loader.load("teapot.json", function( group ) {
     </section>
 
     <section class="slide">
-<pre class="overlay-full language-none" style="font-size: 26px;"><code><span class="interaction1"><span class="token comment" spellcheck="true">// normalized device coordinates
-</span>mouse<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientX <span class="token operator">/</span> window<span class="token punctuation">.</span>innerWidth <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
-mouse<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token operator">-</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientY <span class="token operator">/</span> window<span class="token punctuation">.</span>innerHeight <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span></span>
+<pre class="overlay-full language-none" style="font-size: 26px;"><code><span class="interaction1"><span class="token comment" spellcheck="true">// normalized device coordinates (-1 to +1)
+</span>pointer<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientX <span class="token operator">/</span> window<span class="token punctuation">.</span>innerWidth <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+pointer<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token operator">-</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientY <span class="token operator">/</span> window<span class="token punctuation">.</span>innerHeight <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span></span>
 
 raycaster <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Raycaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="interaction2">raycaster<span class="token punctuation">.</span><span class="token function">setFromCamera<span class="token punctuation">(</span></span> mouse<span class="token punctuation">,</span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="interaction2">raycaster<span class="token punctuation">.</span><span class="token function">setFromCamera<span class="token punctuation">(</span></span> pointer<span class="token punctuation">,</span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 
 <span class="interaction3"><span class="token keyword">var</span> intersects <span class="token operator">=</span> raycaster<span class="token punctuation">.</span><span class="token function">intersectObjects<span class="token punctuation">(</span></span> scene<span class="token punctuation">.</span>children <span class="token punctuation">)</span><span class="token punctuation">;</span>
 

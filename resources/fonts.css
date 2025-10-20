@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: 'Source Sans 3';
   font-style: normal;
   font-weight: 400;
   src: url('fonts/source-sans-pro/SourceSansPro-Regular.eot');
   src: url('fonts/source-sans-pro/SourceSansPro-Regular.eot?#iefix') format('embedded-opentype'), url('fonts/source-sans-pro/SourceSansPro-Regular.woff') format('woff'), url('fonts/source-sans-pro/SourceSansPro-Regular.svg#SourceSansPro-Regular') format('svg');
 }
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: 'Source Sans 3';
   font-style: normal;
   font-weight: 700;
   src: url('fonts/source-sans-pro/SourceSansPro-Bold.eot');
